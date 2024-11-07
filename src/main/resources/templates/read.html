@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>음악 상세보기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .music-info {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .music-info label {
+            font-weight: bold;
+            display: inline-block;
+            width: 80px;
+            color: #555;
+        }
+
+        .action-links {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .action-links a {
+            color: #007BFF;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+
+        img {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>음악 상세정보</h1>
+    <div class="music-info">
+        <label>제목:</label> <span th:text="${music.title}"></span> <br/>
+        <label>가수:</label> <span th:text="${music.singer}"></span> <br/>
+        <label>앨범:</label> <span th:text="${music.album}"></span> <br/>
+        <label>장르:</label> <span th:text="${music.genre}"></span> <br/>
+        <label>발매일:</label> <span th:text="${music.releaseDate}"></span> <br/>
+        <label>순위:</label> <span th:text="${music.ranking}"></span> <br/>
+        <label>예약번호:</label> <span th:text="${music.bookingNum}"></span> <br/>
+    </div>
+    <img th:src="${music.image}" alt="음악 이미지" />
+
+    <div class="action-links">
+        <a th:href="@{/music/delete/{idx}(idx=${music.idx})}">[삭제]</a>
+        <a th:href="@{/music/updateform/{idx}(idx=${music.idx})}">[수정]</a>
+    </div>
+</div>
+
+</body>
+</html>

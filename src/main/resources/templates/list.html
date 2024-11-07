@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Music List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .add-button {
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .music-list {
+            width: 100%;
+            max-width: 1000px;
+            border-collapse: collapse;
+        }
+
+        .music-list th, .music-list td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .music-list th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .music-list tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .action-links a {
+            margin: 0 5px;
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+
+        img {
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>강남 음악 마을</h1>
+<a href="/music/addform" class="add-button">[ADD]</a>
+
+<table class="music-list">
+    <thead>
+    <tr>
+        <th>번호</th>
+        <th>제목</th>
+        <th>가수</th>
+        <th>앨범</th>
+        <th>장르</th>
+        <th>발매일</th>
+        <th>순위</th>
+        <th>예약번호</th>
+        <th>앨범 이미지</th>
+        <th>수정</th>
+    </tr>
+    </thead>
+    <tbody th:each="music : ${musics}">
+    <tr>
+        <td th:text="${music.idx}"></td>
+        <td>
+            <a th:href="@{/music/{idx}(idx=${music.idx})}" th:text="${music.title}"></a>
+        </td>
+        <td th:text="${music.singer}"></td>
+        <td th:text="${music.album}"></td>
+        <td th:text="${music.genre}"></td>
+        <td th:text="${music.releaseDate}"></td>
+        <td th:text="${music.ranking}"></td>
+        <td th:text="${music.bookingNum}"></td>
+        <td><img th:src="${music.image}" width="50" height="50"/></td>
+        <td class="action-links">
+            <a th:href="@{/music/delete/{idx}(idx=${music.idx})}">삭제</a>
+            <a th:href="@{/music/updateform/{idx}(idx=${music.idx})}">수정</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
