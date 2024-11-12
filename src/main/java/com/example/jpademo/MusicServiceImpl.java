@@ -36,4 +36,10 @@ public class MusicServiceImpl implements MusicService {
     public void deleteById(long idx) {
         musicRepository.deleteById(idx);
     }
+    @Override
+    public List<MusicDTO> searchByKeyword(String keyword) {
+        return musicRepository.findByTitleContainingIgnoreCaseOrSingerContainingIgnoreCase(keyword, keyword).stream()
+                .map(Utils::toDTO)
+                .collect(Collectors.toList());
+    }
 }

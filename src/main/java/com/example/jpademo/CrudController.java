@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 // /movie  목록
@@ -64,6 +65,16 @@ public class CrudController {
     public String update(@ModelAttribute MusicDTO music) {
         musicService.save(music);
         return "redirect:/music";
+    }
+
+    @RequestMapping("/music/search")
+    public String search(@RequestParam("keyword") String keyword, Model model) {
+        if (keyword == null || keyword.isEmpty()) {
+            model.addAttribute("musics", musicService.findAll());
+        } else {
+            model.addAttribute("musics", musicService.searchByKeyword(keyword));
+        }
+        return "list";
     }
 
 }

@@ -10,4 +10,7 @@ public interface MusicService {
     void save(MusicDTO music);
 
     void deleteById(long idx);
+
+    Object searchByKeyword(String keyword);
+
 }
