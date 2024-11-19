@@ -25,6 +25,7 @@ public class Artist {
     private LocalDate debutDate;
 
     @Column(nullable = false)
+
     private String agency;
 
 }
