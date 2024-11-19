@@ -40,4 +40,6 @@ public class Music {
     @ManyToOne
     @JoinColumn(name = "singer", insertable = false, updatable = false)
     private Artist artist;
+
+
 }
