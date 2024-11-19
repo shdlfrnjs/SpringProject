@@ -20,6 +20,7 @@ public class Music {
 
     private String title;
 
+    @Column(nullable = false)
     private String singer;
 
     private String album;
@@ -36,4 +37,7 @@ public class Music {
 
     private String image;
 
+    @ManyToOne
+    @JoinColumn(name = "singer", insertable = false, updatable = false)
+    private Artist artist;
 }
