@@ -41,4 +41,8 @@ public class Music {
     @JoinColumn(name = "singer", referencedColumnName = "singer", insertable = false, updatable = false)
     private Artist artist;
 
+    //INSERT INTO artist (singer, debut_date, agency)
+    //VALUES ('Zico', '2011-01-01', 'KOZ Entertainment');
+    //INSERT INTO artist (singer, debut_date, agency)
+    //VALUES ('The Weeknd', '2010-12-01', 'XO Records');
 }
