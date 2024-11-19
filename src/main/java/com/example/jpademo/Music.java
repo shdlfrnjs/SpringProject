@@ -38,8 +38,6 @@ public class Music {
     private String image;
 
     @ManyToOne
-    @JoinColumn(name = "singer", insertable = false, updatable = false)
+    @JoinColumn(name = "singer", referencedColumnName = "singer", insertable = false, updatable = false)
     private Artist artist;
-
-
 }
