@@ -3,6 +3,7 @@ package com.example.jpademo;
 import java.util.List;
 
 public interface MusicService {
+
     List<MusicDTO> findAll();
 
     MusicDTO findById(long idx);

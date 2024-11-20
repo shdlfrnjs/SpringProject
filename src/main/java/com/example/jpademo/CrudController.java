@@ -10,14 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-// /movie  목록
-// /movie/delete/5  삭제
-// /movie/addform
-// /movie/add
-// /movie/updateform.html
-// /movie/update
-
-
 @Controller
 public class CrudController {
 
