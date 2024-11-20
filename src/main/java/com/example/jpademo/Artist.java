@@ -29,4 +29,5 @@ public class Artist {
     private String agency;
 
     private String image;
+
 }
