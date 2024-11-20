@@ -41,4 +41,8 @@ public class Music {
     @JoinColumn(name = "singer", referencedColumnName = "singer", insertable = false, updatable = false)
     private Artist artist;
 
+    @ManyToOne
+    @JoinColumn(name = "album", referencedColumnName = "album", insertable = false, updatable = false)
+    private AlbumEntity albumEntity;
+
 }

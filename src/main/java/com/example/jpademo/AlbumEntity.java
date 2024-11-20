@@ -6,26 +6,26 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "artist")
+@Table(name = "album")
 @ToString
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Artist {
+public class AlbumEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(nullable = false, unique = true)
-    private String singer;
-
-    @Column(name = "debut_date", nullable = false)
-    private LocalDate debutDate;
+    private String album;
 
     @Column(nullable = false)
-    private String agency;
+    private String singer;
+
+    @Column(name = "release_date", nullable = false)
+    private LocalDate releaseDate;
 
     @Column(nullable = false)
     private String image;
