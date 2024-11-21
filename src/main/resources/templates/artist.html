@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>아티스트 정보</title>
+</head>
+<body>
+
+<h1>아티스트 정보</h1>
+
+<div th:if="${artist != null}">
+    <h2 th:text="${artist.singer}">가수 이름</h2>
+    <p><strong>데뷔일:</strong> <span th:text="${artist.debutDate}">데뷔일</span></p>
+    <p><strong>소속사:</strong> <span th:text="${artist.agency}">소속사</span></p>
+    <img th:src="@{/img/artist/{image}(image=${artist.image})}" alt="Artist Image"/>
+</div>
+
+<div th:if="${artist == null}">
+    <p>해당 아티스트의 정보가 없습니다.</p>
+</div>
+
+</body>
+</html>

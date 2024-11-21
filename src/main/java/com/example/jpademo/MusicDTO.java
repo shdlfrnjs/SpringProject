@@ -25,6 +25,6 @@ public class MusicDTO {
     private LocalDate releaseDate;
 
     private int ranking;
-    private String bookingNum;
+    private int hits;
     private String image;
 }

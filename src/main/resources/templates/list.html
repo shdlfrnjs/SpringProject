@@ -17,13 +17,6 @@
             margin-bottom: 20px;
         }
 
-        .add-button {
-            margin-bottom: 15px;
-            font-weight: bold;
-            color: #4CAF50;
-            text-decoration: none;
-        }
-
         .music-list {
             width: 100%;
             max-width: 1000px;
@@ -45,16 +38,6 @@
             background-color: #f9f9f9;
         }
 
-        .action-links a {
-            margin: 0 5px;
-            color: #007BFF;
-            text-decoration: none;
-        }
-
-        .action-links a:hover {
-            text-decoration: underline;
-        }
-
         img {
             border-radius: 4px;
         }
@@ -63,7 +46,6 @@
 <body>
 
 <h1>강남 음악 마을</h1>
-<a href="/music/addform" class="add-button">[ADD]</a>
 
 <div class="search">
     <form action="/music/search" method="get">
@@ -82,9 +64,8 @@
         <th>장르</th>
         <th>발매일</th>
         <th>순위</th>
-        <th>예약번호</th>
+        <th>조회수</th>
         <th>앨범 이미지</th>
-        <th>수정</th>
     </tr>
     </thead>
     <tbody th:each="music : ${musics}">
@@ -93,17 +74,15 @@
         <td>
             <a th:href="@{/music/{idx}(idx=${music.idx})}" th:text="${music.title}"></a>
         </td>
-        <td th:text="${music.singer}"></td>
+        <td>
+            <a th:href="@{/artist/{singer}(singer=${music.singer})}" th:text="${music.singer}"></a>
+        </td>
         <td th:text="${music.album}"></td>
         <td th:text="${music.genre}"></td>
         <td th:text="${music.releaseDate}"></td>
         <td th:text="${music.ranking}"></td>
-        <td th:text="${music.bookingNum}"></td>
-        <td><img th:src="${music.image}" width="50" height="50"/></td>
-        <td class="action-links">
-            <a th:href="@{/music/delete/{idx}(idx=${music.idx})}">삭제</a>
-            <a th:href="@{/music/updateform/{idx}(idx=${music.idx})}">수정</a>
-        </td>
+        <td th:text="${music.hits}"></td>
+        <td><img th:src="@{/img/album/{image}(image=${music.image})}" width="50" height="50"/></td>
     </tr>
     </tbody>
 </table>

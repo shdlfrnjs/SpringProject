@@ -10,7 +10,7 @@ public class Utils {
                 .genre(entity.getGenre())
                 .releaseDate(entity.getReleaseDate()) // Date 유지
                 .ranking(entity.getRanking())
-                .bookingNum(entity.getBookingNum()) // bookingNum 필드
+                .hits(entity.getHits())
                 .image(entity.getImage())
                 .build();
     }
@@ -24,7 +24,7 @@ public class Utils {
                 .genre(dto.getGenre())
                 .releaseDate(dto.getReleaseDate()) // Date 유지
                 .ranking(dto.getRanking())
-                .bookingNum(dto.getBookingNum()) // bookingNum 필드
+                .hits(dto.getHits())
                 .image(dto.getImage())
                 .build();
     }
