@@ -6,6 +6,8 @@ public interface MusicService {
 
     List<MusicDTO> findAll();
 
+    List<MusicDTO> sortedMusics(String sort);
+
     MusicDTO findById(long idx);
 
     void save(MusicDTO music);

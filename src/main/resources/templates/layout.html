@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layout</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- content script -->
+  <th:block layout:fragment="css"></th:block>
+  <!-- content script -->
+  <th:block layout:fragment="script"></th:block>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      margin: 10px;
+    }
+
+    .logo {
+      flex: 0 0 auto;
+      margin-left: 10px;
+    }
+
+    .search {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .search-group {
+        width: 300px; /* 검색창 너비 설정 */
+        display: flex; /* 인풋과 버튼을 가로 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+        border-radius: 25px; /* 둥근 테두리 */
+        overflow: hidden; /* 내부 요소가 밖으로 나가지 않도록 */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+        transition: width 0.3s ease-in-out; /* 너비 전환 애니메이션 */
+    }
+
+    .search-input {
+        border: none; /* 테두리 제거 */
+        padding: 10px 15px; /* 내부 여백 */
+        flex-grow: 1; /* 검색창이 공간을 채우도록 */
+        font-size: 16px; /* 글자 크기 */
+        outline: none; /* 포커스 시 외곽선 제거 */
+        box-shadow: none; /* 포커스 시 그림자 제거 */
+    }
+
+    .search-input::placeholder {
+        color: #aaa; /* 플레이스홀더 색상 */
+        font-style: italic; /* 플레이스홀더 스타일 */
+    }
+
+    .search-btn {
+        border: none; /* 버튼 테두리 제거 */
+        background-color: #fff; /* 버튼 배경색 */
+        color: black; /* 아이콘 색상 */
+        padding: 10px; /* 버튼 내부 여백 */
+        display: flex; /* 플렉스박스 사용 */
+        align-items: center; /* 수직 중앙 정렬 */
+        justify-content: center; /* 수평 중앙 정렬 */
+        cursor: pointer; /* 클릭 커서 */
+        transition: background-color 0.2s ease-in-out; /* 호버 전환 효과 */
+    }
+
+    .search-btn .fas {
+        font-size: 1rem; /* 아이콘 크기 */
+    }
+
+    .container {
+        display: flex;
+        margin: 10px;
+        gap: 20px;
+        align-items: flex-start; /* 수평 정렬을 왼쪽으로 */
+    }
+
+    .content {
+        flex: 1;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 10px;
+        max-height: 80vh; /* 콘텐츠 영역의 최대 높이를 화면 크기로 설정 */
+        overflow-y: auto; /* 콘텐츠 영역을 스크롤 가능하도록 설정 */
+        box-sizing: border-box;
+    }
+
+    .tab-menu {
+      flex: 0 0 20%;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      padding: 10px;
+      box-sizing: border-box;
+      align-self: flex-start; /* 탭 메뉴 높이를 콘텐츠 영역과 독립적으로 설정 */
+    }
+
+    .tab-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .tab-menu .menu-item {
+      margin-bottom: 15px;
+    }
+
+    .tab-menu .menu-item > h4 {
+      margin-bottom: 10px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .tab-menu .submenu {
+      padding-left: 15px;
+    }
+
+    .tab-menu .submenu li {
+      margin-bottom: 5px;
+    }
+
+    .tab-menu .submenu li a {
+      text-decoration: none;
+      color: #333;
+      padding: 5px 0;
+      display: block;
+      font-weight: normal;
+    }
+
+    .tab-menu .submenu li a:hover {
+      color: #007BFF;
+    }
+
+    /* 스크롤바 스타일 */
+    ::-webkit-scrollbar {
+        width: 10px; /* 세로 스크롤바 너비 */
+        height: 10px; /* 가로 스크롤바 높이 */
+    }
+
+    /* 스크롤바 트랙(배경) 스타일 */
+    ::-webkit-scrollbar-track {
+        background: transparent; /* 스크롤바 배경을 투명하게 설정 */
+    }
+
+    /* 스크롤바 핸들(손잡이) 스타일 */
+    ::-webkit-scrollbar-thumb {
+        background-color: #888; /* 스크롤바 손잡이 색 */
+        border-radius: none; /* 둥근 모서리 */
+    }
+
+    /* 스크롤바 핸들(손잡이) 호버 스타일 */
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #555; /* 호버 시 색상 변경 */
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <h1>
+      <a href="/main"><i class="fa-solid fa-music"> T O W N</i></a>
+    </h1>
+  </div>
+  <div class="search">
+    <form class="search-group" action="/music/search" method="get">
+      <input name="keyword" class="search-input" placeholder="검색어 입력" type="text" aria-label="검색어 입력" autocomplete="off">
+      <button class="btn search-btn" type="submit">
+        <i class="fas fa-search"></i>
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tab-menu">
+    <ul>
+      <li class="menu-item">
+        <h3><i class="fa-solid fa-bars"> M E N U</i></h3>
+        <h4>음악</h4>
+        <hr>
+        <ul class="submenu">
+          <li><a href="#"><i class="fa-solid fa-square-poll-vertical"> 인기차트</i></a></li>
+          <li><a href="#"><i class="fa-solid fa-compact-disc"> 최신음악</i></a></li>
+        </ul>
+        <h4>장르</h4>
+        <hr>
+        <ul class="submenu">
+          <li><a href="#"><i class="fa-solid fa-minus"> POP</i></a></li>
+          <li><a href="#"><i class="fa-solid fa-minus"> 댄스</i></a></li>
+          <li><a href="#"><i class="fa-solid fa-minus"> 힙합</i></a></li>
+          <li><a href="#"><i class="fa-solid fa-minus"> 밴드</i></a></li>
+          <li><a href="#"><i class="fa-solid fa-minus"> 발라드</i></a></li>
+        </ul>
+        <h4>For You</h4>
+        <hr>
+        <ul class="submenu">
+          <li><a href="#"><i class="fa-solid fa-circle-user"> 나의 음악</i></a></li>
+          <li><a href="#"><i class="fa-solid fa-play"> 내 플레이리스트</i></a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <!-- content fragment 사용 -->
+    <div layout:fragment="content"></div>
+  </div>
+</div>
+
+</body>
+</html>
