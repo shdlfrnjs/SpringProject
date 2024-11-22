@@ -8,4 +8,6 @@ public interface MusicRepository extends JpaRepository<Music, Long> {
 
     List<Music> findByTitleContainingIgnoreCaseOrSingerContainingIgnoreCase(String title, String singer);
 
+    List<Music> findBySinger(String singer);
+
 }

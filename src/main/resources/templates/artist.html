@@ -1,23 +1,350 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>아티스트 정보</title>
+    <title>Artist Info</title>
+    <!-- index.html 고유 CSS 추가 -->
+    <th:block layout:fragment="css">
+        <!--    <link rel="stylesheet" th:href="@{/css/page/home.css}" >-->
+        <style>
+            .section {
+                margin-bottom: 20px;
+            }
+
+            .artist-info {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+                background-color: #f8f9fa; /* 밝은 배경 */
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+                max-width: auto;
+                margin: 0 auto;
+            }
+
+            .artist-details {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .artist-image {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%; /* 이미지 원형 */
+                object-fit: cover; /* 이미지 크기 유지 */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 이미지 그림자 */
+            }
+
+            .artist-text {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .artist-name {
+                font-size: 1.8rem;
+                font-weight: bold;
+                margin: 0;
+                color: #333;
+            }
+
+            p {
+                margin: 0;
+                font-size: 1rem;
+                color: #555;
+            }
+
+            strong {
+                font-weight: bold;
+                color: #000;
+            }
+
+            .d-flex {
+              display: flex;
+              align-items: center; /* 수직 중앙 정렬 */
+            }
+
+            .justify-content-between {
+              justify-content: space-between; /* 양쪽 끝으로 배치 */
+            }
+
+            h2 {
+              margin-left: 10px; /* 왼쪽 여백 추가 */
+            }
+
+            .sort-dropdown {
+              padding: 8px 12px; /* 드롭다운 내부 여백 키움 */
+              font-size: 1rem; /* 글자 크기 약간 증가 */
+              border-radius: 6px; /* 모서리 둥글게 */
+              border: 1px solid #ddd; /* 기본 테두리 */
+              background-color: #fff; /* 배경색 */
+              outline: none; /* 포커스 시 기본 외곽선 제거 */
+              transition: border-color 0.3s ease; /* 부드러운 전환 */
+            }
+
+            .sort-dropdown:hover {
+              border-color: #007bff; /* 호버 시 테두리 강조 */
+            }
+
+            .sort-dropdown:focus {
+              border-color: #0056b3; /* 포커스 시 테두리 색상 변경 */
+              box-shadow: 0 0 4px rgba(0, 91, 179, 0.25); /* 포커스 시 부드러운 그림자 */
+            }
+
+            /* 테이블 스타일 */
+            .music-list {
+                width: 100%;
+                border-collapse: collapse; /* 테두리 중복 제거 */
+                margin: 0; /* 테이블 상하 여백 */
+                font-size: 1em;
+                font-family: Arial, sans-serif;
+            }
+
+            .music-list th, .music-list td {
+                padding: 10px 15px; /* 셀 안쪽 여백 */
+                text-align: center; /* 텍스트 중앙 정렬 */
+                border-bottom: 1px solid #ddd; /* 셀 아래 테두리 */
+            }
+
+            .music-list thead th {
+                background-color: #f8f9fa; /* 헤더 배경색 */
+                font-weight: bold;
+                text-align: center; /* 헤더 텍스트 중앙 정렬 */
+                border-bottom: 2px solid #dee2e6; /* 헤더 테두리 강조 */
+            }
+
+            /* 곡정보 셀 스타일 */
+            .music-info {
+                display: flex; /* 이미지와 텍스트를 가로 정렬 */
+                align-items: center; /* 수직 중앙 정렬 */
+            }
+
+            .music-info img {
+                width: 60px; /* 이미지 너비 */
+                height: 60px; /* 이미지 높이 */
+                margin-right: 15px; /* 이미지와 텍스트 간 간격 */
+                border-radius: 5px; /* 이미지 둥글게 처리 */
+                object-fit: cover; /* 이미지 크기에 맞게 조정 */
+            }
+
+            .music-details {
+                text-align: left; /* 텍스트 왼쪽 정렬 */
+            }
+
+            .music-title a {
+                font-weight: bold;
+                font-size: 1.1em; /* 제목 크기 */
+                text-decoration: none; /* 링크 밑줄 제거 */
+                color: #333; /* 기본 텍스트 색상 */
+            }
+
+            .music-title a:hover {
+                color: #007bff; /* 호버 시 강조 색상 */
+            }
+
+            .music-singer a {
+                font-size: 0.9em; /* 가수 이름 크기 */
+                color: #6c757d; /* 보조 텍스트 색상 */
+                text-decoration: none; /* 링크 밑줄 제거 */
+            }
+
+            .music-singer a:hover {
+                color: #0056b3; /* 가수 링크 호버 색상 */
+            }
+
+            /* 테이블 열 스타일 */
+            .music-list td:last-child, .music-list th:last-child {
+                text-align: center; /* 마지막 열 중앙 정렬 */
+            }
+
+            .music-list tr:hover {
+                background-color: #f1f3f5; /* 행에 호버 시 배경색 */
+            }
+
+            /* 담기 버튼을 감싸는 컨테이너 스타일 */
+            .btn-container {
+                display: flex;
+                justify-content: center; /* 수평 중앙 정렬 */
+                align-items: center; /* 수직 중앙 정렬 */
+            }
+
+            /* 기본 버튼 스타일 */
+            .btn-add-to-playlist {
+                background-color: transparent; /* 배경색 투명 */
+                color: #000; /* 아이콘 색상 검정 */
+                border: none; /* 검정색 테두리 */
+                padding: 6px 10px; /* 작은 여백 */
+                font-size: 1.2rem; /* 아이콘 크기 작게 */
+                border-radius: 50%; /* 원형 버튼 */
+                display: flex; /* 아이콘 중앙 정렬 */
+                align-items: center; /* 수직 중앙 정렬 */
+                justify-content: center; /* 수평 중앙 정렬 */
+                cursor: pointer; /* 포인터 모양으로 변경 */
+                transition: transform 0.2s ease; /* 호버 시 효과 */
+            }
+
+            /* 호버 시 간단한 효과 */
+            .btn-add-to-playlist:hover {
+                transform: scale(1.2); /* 버튼 크기 살짝 커짐 */
+            }
+
+            /* 클릭 시 효과 */
+            .btn-add-to-playlist:active {
+                transform: scale(0.95); /* 클릭 시 버튼 크기 축소 */
+            }
+
+            /* 버튼 포커스 스타일 (키보드 접근성) */
+            .btn-add-to-playlist:focus {
+                outline: none; /* 기본 아웃라인 제거 */
+            }
+
+            .pagination {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-top: 20px;
+              gap: 5px;
+            }
+
+            .pagination a {
+                display: inline-block;
+                padding: 8px 12px;
+                margin: 0 4px;
+                color: black;
+                text-decoration: none;
+                border: 1px solid black;
+                border-radius: 4px;
+                transition: background-color 0.3s, color 0.3s;
+            }
+
+            .pagination a:hover {
+                background-color: black;
+                color: white;
+            }
+
+            .pagination a.active {
+                background-color: black;
+                color: white;
+                pointer-events: none; /* 활성화된 페이지는 클릭 불가 */
+            }
+
+            .pagination a.disabled {
+                color: #aaa;
+                border-color: #aaa;
+                pointer-events: none; /* 비활성화된 버튼은 클릭 불가 */
+            }
+        </style>
+    </th:block>
+    <!-- index.html 고유 스크립트 추가 -->
+    <th:block layout:fragment="script">
+        <!--    <script th:src="@{/js/page/home.js}"></script>-->
+        <script>
+            function sortMusic() {
+              const selectedSort = document.getElementById("sortSelect").value;
+              const urlParams = new URLSearchParams(window.location.search);
+              urlParams.set('page', 1);
+              urlParams.set('sort', selectedSort);
+              window.location.search = urlParams.toString();
+            }
+        </script>
+    </th:block>
 </head>
 <body>
+<!-- Content -->
+<div layout:fragment="content">
+    <div>
+        <div class="section">
+            <h2>아티스트</h2>
+            <div th:if="${artist != null}" class="artist-info">
+                <div class="artist-details">
+                    <img class="artist-image" th:src="@{/img/artist/{image}(image=${artist.image})}" alt="Artist Image"/>
+                    <div class="artist-text">
+                        <h2 th:text="${artist.singer}" class="artist-name">가수 이름</h2>
+                        <p><strong>데뷔일:</strong> <span th:text="${artist.debutDate}">데뷔일</span></p>
+                        <p><strong>소속사:</strong> <span th:text="${artist.agency}">소속사</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="d-flex justify-content-between">
+                <h2>곡 (<span th:text="${totalItems}"></span>)</h2>
+                <select id="sortSelect" class="sort-dropdown" onchange="sortMusic()">
+                    <option value="releaseDate" th:selected="${selectedSort == 'releaseDate'}">발매일순</option>
+                    <option value="ranking" th:selected="${selectedSort == 'ranking'}">인기순</option>
+                    <option value="title" th:selected="${selectedSort == 'title'}">제목순</option>
+                    <option value="hits" th:selected="${selectedSort == 'hits'}">조회수순</option>
+                </select>
+            </div>
+            <table class="music-list">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>곡정보</th>
+                    <th>앨범</th>
+                    <th>조회수</th>
+                    <th>담기</th>
+                </tr>
+                </thead>
+                <tbody th:each="music : ${musics}">
+                <tr>
+                    <td th:text="${music.idx}"></td>
+                    <td class="music-info">
+                        <img th:src="@{/img/album/{image}(image=${music.image})}" alt="앨범 이미지">
+                        <div class="music-details">
+                            <div class="music-title">
+                                <a th:href="@{/music/{idx}(idx=${music.idx})}" th:text="${music.title}"></a>
+                            </div>
+                            <div class="music-singer">
+                                <a th:href="@{/artist/{singer}(singer=${music.singer})}" th:text="${music.singer}"></a>
+                            </div>
+                        </div>
+                    </td>
+                    <td th:text="${music.album}"></td>
+                    <td th:text="${music.hits}"></td>
+                    <td>
+                        <div class="btn-container">
+                            <button class="btn-add-to-playlist">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
-<h1>아티스트 정보</h1>
+            <!-- 페이징 네비게이션 -->
+            <div class="pagination">
+                <!-- 이전 버튼 -->
+                <div th:if="${currentPage > 1}">
+                    <a th:href="@{/artist/{singer}(singer=${artist.singer}, page=${currentPage - 1}, size=3, sort=${selectedSort})}" th:text="'이전'"></a>
+                </div>
+                <div th:if="${currentPage == 1}">
+                    <a class="disabled" th:text="'이전'"></a>
+                </div>
 
-<div th:if="${artist != null}">
-    <h2 th:text="${artist.singer}">가수 이름</h2>
-    <p><strong>데뷔일:</strong> <span th:text="${artist.debutDate}">데뷔일</span></p>
-    <p><strong>소속사:</strong> <span th:text="${artist.agency}">소속사</span></p>
-    <img th:src="@{/img/artist/{image}(image=${artist.image})}" alt="Artist Image"/>
+                <!-- 페이지 번호 버튼 -->
+                <div th:each="i : ${#numbers.sequence(1, totalPages)}">
+                    <a th:href="@{/artist/{singer}(singer=${artist.singer}, page=${i}, size=3, sort=${selectedSort})}"
+                       th:classappend="${i == currentPage ? 'active' : ''}"
+                       th:text="${i}"></a>
+                </div>
+
+                <!-- 다음 버튼 -->
+                <div th:if="${currentPage < totalPages}">
+                    <a th:href="@{/artist/{singer}(singer=${artist.singer}, page=${currentPage + 1}, size=3, sort=${selectedSort})}" th:text="'다음'"></a>
+                </div>
+                <div th:if="${currentPage == totalPages}">
+                    <a class="disabled" th:text="'다음'"></a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<div th:if="${artist == null}">
-    <p>해당 아티스트의 정보가 없습니다.</p>
-</div>
-
 </body>
 </html>

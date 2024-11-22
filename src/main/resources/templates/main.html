@@ -10,6 +10,10 @@
   <th:block layout:fragment="css">
     <!--    <link rel="stylesheet" th:href="@{/css/page/home.css}" >-->
     <style>
+      .section {
+          margin-bottom: 20px;
+      }
+
       .d-flex {
         display: flex;
         align-items: center; /* 수직 중앙 정렬 */
@@ -112,6 +116,13 @@
           background-color: #f1f3f5; /* 행에 호버 시 배경색 */
       }
 
+      /* 담기 버튼을 감싸는 컨테이너 스타일 */
+      .btn-container {
+          display: flex;
+          justify-content: center; /* 수평 중앙 정렬 */
+          align-items: center; /* 수직 중앙 정렬 */
+      }
+
       /* 기본 버튼 스타일 */
       .btn-add-to-playlist {
           background-color: transparent; /* 배경색 투명 */
@@ -196,77 +207,79 @@
 <body>
 <!-- Content -->
 <div layout:fragment="content">
-  <!-- 1번 메인컨텐츠 (전체 곡 보기) -->
   <div>
-    <div class="d-flex justify-content-between">
-      <h2>전체 곡 보기 <i class="fa-solid fa-music"></i></h2>
-      <select id="sortSelect" class="sort-dropdown" onchange="sortMusic()">
-        <option value="releaseDate" th:selected="${selectedSort == 'releaseDate'}">발매일순</option>
-        <option value="ranking" th:selected="${selectedSort == 'ranking'}">인기순</option>
-        <option value="title" th:selected="${selectedSort == 'title'}">제목순</option>
-        <option value="hits" th:selected="${selectedSort == 'hits'}">조회수순</option>
-      </select>
-    </div>
-    <table class="music-list">
-      <thead>
-      <tr>
-        <th>번호</th>
-        <th>곡정보</th>
-        <th>앨범</th>
-        <th>조회수</th>
-        <th>담기</th>
-      </tr>
-      </thead>
-      <tbody th:each="music : ${musics}">
-      <tr>
-        <td th:text="${music.idx}"></td>
-        <td class="music-info">
-          <img th:src="@{/img/album/{image}(image=${music.image})}" alt="앨범 이미지">
-          <div class="music-details">
-            <div class="music-title">
-              <a th:href="@{/music/{idx}(idx=${music.idx})}" th:text="${music.title}"></a>
+    <!-- 1번 메인컨텐츠 (전체 곡 보기) -->
+    <div class="section">
+      <div class="d-flex justify-content-between">
+        <h2>전체 곡 보기 <i class="fa-solid fa-music"></i></h2>
+        <select id="sortSelect" class="sort-dropdown" onchange="sortMusic()">
+          <option value="releaseDate" th:selected="${selectedSort == 'releaseDate'}">발매일순</option>
+          <option value="ranking" th:selected="${selectedSort == 'ranking'}">인기순</option>
+          <option value="title" th:selected="${selectedSort == 'title'}">제목순</option>
+          <option value="hits" th:selected="${selectedSort == 'hits'}">조회수순</option>
+        </select>
+      </div>
+      <table class="music-list">
+        <thead>
+        <tr>
+          <th>번호</th>
+          <th>곡정보</th>
+          <th>앨범</th>
+          <th>조회수</th>
+          <th>담기</th>
+        </tr>
+        </thead>
+        <tbody th:each="music : ${musics}">
+        <tr>
+          <td th:text="${music.idx}"></td>
+          <td class="music-info">
+            <img th:src="@{/img/album/{image}(image=${music.image})}" alt="앨범 이미지">
+            <div class="music-details">
+              <div class="music-title">
+                <a th:href="@{/music/{idx}(idx=${music.idx})}" th:text="${music.title}"></a>
+              </div>
+              <div class="music-singer">
+                <a th:href="@{/artist/{singer}(singer=${music.singer})}" th:text="${music.singer}"></a>
+              </div>
             </div>
-            <div class="music-singer">
-              <a th:href="@{/artist/{singer}(singer=${music.singer})}" th:text="${music.singer}"></a>
+          </td>
+          <td th:text="${music.album}"></td>
+          <td th:text="${music.hits}"></td>
+          <td>
+            <div class="btn-container">
+              <button class="btn-add-to-playlist">
+                <i class="fa-solid fa-plus"></i>
+              </button>
             </div>
-          </div>
-        </td>
-        <td th:text="${music.album}"></td>
-        <td th:text="${music.hits}"></td>
-        <td>
-          <button type="button" class="btn-add-to-playlist">
-            <i class="fa-solid fa-plus"></i>
-          </button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+          </td>
+        </tr>
+        </tbody>
+      </table>
 
-    <!-- 페이징 네비게이션 -->
-    <div class="pagination">
-      <!-- 이전 버튼 -->
-      <div th:if="${currentPage > 1}">
-        <a th:href="@{ /main(page=${currentPage - 1}, size=10, sort=${selectedSort}) }" th:text="'이전'"></a>
-      </div>
-      <div th:if="${currentPage == 1}">
-        <a class="disabled" th:text="'이전'"></a>
-      </div>
+      <!-- 페이징 네비게이션 -->
+      <div class="pagination">
+        <!-- 이전 버튼 -->
+        <div th:if="${currentPage > 1}">
+          <a th:href="@{ /main(page=${currentPage - 1}, size=10, sort=${selectedSort}) }" th:text="'이전'"></a>
+        </div>
+        <div th:if="${currentPage == 1}">
+          <a class="disabled" th:text="'이전'"></a>
+        </div>
 
-      <!-- 페이지 번호 버튼 -->
-      <div th:each="i : ${#numbers.sequence(1, totalPages)}">
-        <a th:href="@{ /main(page=${i}, size=10, sort=${selectedSort}) }" th:classappend="${i == currentPage ? 'active' : ''}" th:text="${i}"></a>
-      </div>
+        <!-- 페이지 번호 버튼 -->
+        <div th:each="i : ${#numbers.sequence(1, totalPages)}">
+          <a th:href="@{ /main(page=${i}, size=10, sort=${selectedSort}) }" th:classappend="${i == currentPage ? 'active' : ''}" th:text="${i}"></a>
+        </div>
 
-      <!-- 다음 버튼 -->
-      <div th:if="${currentPage < totalPages}">
-        <a th:href="@{ /main(page=${currentPage + 1}, size=10, sort=${selectedSort}) }" th:text="'다음'"></a>
-      </div>
-      <div th:if="${currentPage == totalPages}">
-        <a class="disabled" th:text="'다음'"></a>
+        <!-- 다음 버튼 -->
+        <div th:if="${currentPage < totalPages}">
+          <a th:href="@{ /main(page=${currentPage + 1}, size=10, sort=${selectedSort}) }" th:text="'다음'"></a>
+        </div>
+        <div th:if="${currentPage == totalPages}">
+          <a class="disabled" th:text="'다음'"></a>
+        </div>
       </div>
     </div>
-
-
   </div>
 </div>
 </body>
