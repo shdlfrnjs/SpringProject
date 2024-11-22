@@ -33,11 +33,11 @@ public class CrudController {
         return "redirect:/music";
     }
 
-    @RequestMapping("/music/{idx}")
+    /*@RequestMapping("/music/{idx}")
     public String read(@PathVariable long idx, Model model) {
         model.addAttribute("music", musicService.findById(idx));
         return "read";
-    }
+    }*/
 
     @RequestMapping("/music/delete/{idx}")
     public String delete(@PathVariable long idx) {

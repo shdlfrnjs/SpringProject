@@ -53,6 +53,11 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
+    public void incrementHits(long idx) {
+        musicRepository.incrementHits(idx);
+    }
+
+    @Override
     public void save(MusicDTO musicDTO) {
         Music music = Utils.toEntity(musicDTO);
         musicRepository.save(music);

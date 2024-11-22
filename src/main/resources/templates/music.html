@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Contents</title>
+    <!-- index.html 고유 CSS 추가 -->
+    <th:block layout:fragment="css">
+        <!--    <link rel="stylesheet" th:href="@{/css/page/home.css}" >-->
+        <style>
+            .section {
+                margin-bottom: 20px;
+            }
+
+            h2 {
+                margin-left: 20px; /* 왼쪽 여백 추가 */
+            }
+
+            /* 전체 컨테이너 */
+            .music-detail-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f9f9f9;
+                border-radius: 12px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                font-family: Arial, sans-serif;
+            }
+
+            /* 헤더 섹션 */
+            .music-header {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+
+            .music-cover {
+                width: 150px;
+                height: 150px;
+                border-radius: 12px;
+                object-fit: cover;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            .music-header-text {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .music-title {
+                font-size: 2rem;
+                font-weight: bold;
+                margin: 0;
+                color: #333;
+            }
+
+            .music-singer {
+                font-size: 1.2rem;
+                margin: 0;
+                color: #555;
+            }
+
+            /* 곡 상세 정보 */
+            .music-details {
+                margin-top: 20px;
+            }
+
+            .music-details p {
+                margin: 10px 0;
+                font-size: 1rem;
+                color: #555;
+            }
+
+            .music-details strong {
+                font-weight: bold;
+                color: #000;
+            }
+
+            /* 버튼 섹션 */
+            .btn-container {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+
+            .btn-add-to-playlist {
+                background-color: #000;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                font-size: 1rem;
+                font-weight: bold;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .btn-add-to-playlist i {
+                font-size: 1.2rem;
+            }
+
+            .btn-add-to-playlist:hover {
+                background-color: #555;
+                transform: scale(1.05);
+            }
+
+            .btn-add-to-playlist:active {
+                transform: scale(0.95);
+            }
+        </style>
+    </th:block>
+    <!-- index.html 고유 스크립트 추가 -->
+    <th:block layout:fragment="script">
+        <!--    <script th:src="@{/js/page/home.js}"></script>-->
+        <script>
+
+        </script>
+    </th:block>
+</head>
+<body>
+<!-- Content -->
+<div layout:fragment="content">
+    <div class="section">
+        <h2>곡 정보</h2>
+        <div class="music-detail-container">
+
+            <div class="music-header">
+                <img class="music-cover" th:src="@{/img/album/{image}(image=${music.image})}" alt="Album Cover">
+                <div class="music-header-text">
+                    <h1 class="music-title" th:text="${music.title}">곡 제목</h1>
+                    <h3 class="music-singer" th:text="${music.singer}">가수 이름</h3>
+                </div>
+            </div>
+            <div class="music-details">
+                <p><strong>앨범:</strong> <span th:text="${music.album}">앨범명</span></p>
+                <p><strong>장르:</strong> <span th:text="${music.genre}">장르명</span></p>
+                <p><strong>발매일:</strong> <span th:text="${music.releaseDate}">발매일</span></p>
+                <p><strong>순위:</strong> <span th:text="${music.ranking}">순위</span></p>
+                <p><strong>조회수:</strong> <span th:text="${music.hits}">조회수</span></p>
+            </div>
+            <div class="btn-container">
+                <button class="btn-add-to-playlist">
+                    <i class="fa-solid fa-plus"> Add to PlayList</i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

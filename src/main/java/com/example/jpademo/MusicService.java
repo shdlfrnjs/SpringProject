@@ -10,6 +10,8 @@ public interface MusicService {
 
     MusicDTO findById(long idx);
 
+    void incrementHits(long idx);
+
     void save(MusicDTO music);
 
     void deleteById(long idx);
