@@ -24,7 +24,7 @@ public class ArtistController {
             @PathVariable("singer") String singer,
             @RequestParam(value = "sort", defaultValue = "releaseDate") String sort,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "3") int size,
+            @RequestParam(value = "size", defaultValue = "5") int size,
             Model model) {
 
         System.out.println("검색할 가수: " + singer);

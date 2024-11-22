@@ -259,7 +259,7 @@
 <div layout:fragment="content">
     <div>
         <div class="section">
-            <h2>아티스트</h2>
+            <h2>아티스트 정보</h2>
             <div th:if="${artist != null}" class="artist-info">
                 <div class="artist-details">
                     <img class="artist-image" th:src="@{/img/artist/{image}(image=${artist.image})}" alt="Artist Image"/>
@@ -322,7 +322,7 @@
             <div class="pagination">
                 <!-- 이전 버튼 -->
                 <div th:if="${currentPage > 1}">
-                    <a th:href="@{/artist/{singer}(singer=${artist.singer}, page=${currentPage - 1}, size=3, sort=${selectedSort})}" th:text="'이전'"></a>
+                    <a th:href="@{/artist/{singer}(singer=${artist.singer}, page=${currentPage - 1}, size=5, sort=${selectedSort})}" th:text="'이전'"></a>
                 </div>
                 <div th:if="${currentPage == 1}">
                     <a class="disabled" th:text="'이전'"></a>
@@ -330,14 +330,14 @@
 
                 <!-- 페이지 번호 버튼 -->
                 <div th:each="i : ${#numbers.sequence(1, totalPages)}">
-                    <a th:href="@{/artist/{singer}(singer=${artist.singer}, page=${i}, size=3, sort=${selectedSort})}"
+                    <a th:href="@{/artist/{singer}(singer=${artist.singer}, page=${i}, size=5, sort=${selectedSort})}"
                        th:classappend="${i == currentPage ? 'active' : ''}"
                        th:text="${i}"></a>
                 </div>
 
                 <!-- 다음 버튼 -->
                 <div th:if="${currentPage < totalPages}">
-                    <a th:href="@{/artist/{singer}(singer=${artist.singer}, page=${currentPage + 1}, size=3, sort=${selectedSort})}" th:text="'다음'"></a>
+                    <a th:href="@{/artist/{singer}(singer=${artist.singer}, page=${currentPage + 1}, size=5, sort=${selectedSort})}" th:text="'다음'"></a>
                 </div>
                 <div th:if="${currentPage == totalPages}">
                     <a class="disabled" th:text="'다음'"></a>
