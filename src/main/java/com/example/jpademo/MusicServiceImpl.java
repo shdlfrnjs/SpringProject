@@ -82,4 +82,12 @@ public class MusicServiceImpl implements MusicService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<MusicDTO> getMusicsByIdx(List<Long> musicIdx) {
+        // ID 목록에 해당하는 음악들을 DB에서 찾고, MusicDTO로 변환하여 반환
+        return musicRepository.findAllByIdxIn(musicIdx).stream()
+                .map(Utils::toDTO)
+                .collect(Collectors.toList());
+    }
+
 }

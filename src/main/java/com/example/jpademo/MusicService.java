@@ -19,4 +19,7 @@ public interface MusicService {
     Object searchByKeyword(String keyword);
 
     List<MusicDTO> searchMusicByKeyword(String keyword);
+
+    List<MusicDTO> getMusicsByIdx(List<Long> musicIdx);
+
 }

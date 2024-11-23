@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <meta charset="UTF-8">
+  <title>My Music</title>
+  <!-- mymusic.html 고유 CSS 추가 -->
+  <th:block layout:fragment="css">
+    <style>
+      .d-flex {
+        display: flex;
+        align-items: center; /* 수직 중앙 정렬 */
+      }
+
+      .justify-content-between {
+        justify-content: space-between; /* 양쪽 끝으로 배치 */
+      }
+
+      h2 {
+        margin-left: 10px; /* 왼쪽 여백 추가 */
+      }
+
+      /* 테이블 스타일 */
+      .music-list {
+        width: 100%;
+        border-collapse: collapse; /* 테두리 중복 제거 */
+        margin: 0; /* 테이블 상하 여백 */
+        font-size: 1em;
+        font-family: Arial, sans-serif;
+      }
+
+      .music-list th, .music-list td {
+        padding: 10px 15px; /* 셀 안쪽 여백 */
+        text-align: center; /* 텍스트 중앙 정렬 */
+        border-bottom: 1px solid #ddd; /* 셀 아래 테두리 */
+      }
+
+      .music-list thead th {
+        background-color: #f8f9fa; /* 헤더 배경색 */
+        font-weight: bold;
+        text-align: center; /* 헤더 텍스트 중앙 정렬 */
+        border-bottom: 2px solid #dee2e6; /* 헤더 테두리 강조 */
+      }
+
+      /* 곡정보 셀 스타일 */
+      .music-info {
+        display: flex; /* 이미지와 텍스트를 가로 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+      }
+
+      .music-info img {
+        width: 60px; /* 이미지 너비 */
+        height: 60px; /* 이미지 높이 */
+        margin-right: 15px; /* 이미지와 텍스트 간 간격 */
+        border-radius: 5px; /* 이미지 둥글게 처리 */
+        object-fit: cover; /* 이미지 크기에 맞게 조정 */
+      }
+
+      .music-details {
+        text-align: left; /* 텍스트 왼쪽 정렬 */
+      }
+
+      .music-title a {
+        font-weight: bold;
+        font-size: 1.1em; /* 제목 크기 */
+        text-decoration: none; /* 링크 밑줄 제거 */
+        color: #333; /* 기본 텍스트 색상 */
+      }
+
+      .music-title a:hover {
+        color: #007bff; /* 호버 시 강조 색상 */
+      }
+
+      .music-singer a {
+        font-size: 0.9em; /* 가수 이름 크기 */
+        color: #6c757d; /* 보조 텍스트 색상 */
+        text-decoration: none; /* 링크 밑줄 제거 */
+      }
+
+      .music-singer a:hover {
+        color: #0056b3; /* 가수 링크 호버 색상 */
+      }
+
+      /* 테이블 열 스타일 */
+      .music-list td:last-child, .music-list th:last-child {
+        text-align: center; /* 마지막 열 중앙 정렬 */
+      }
+
+      .music-list tr:hover {
+        background-color: #f1f3f5; /* 행에 호버 시 배경색 */
+      }
+
+      /* 기본 버튼 스타일 */
+      .btn-remove-to-playlist {
+        background-color: transparent; /* 배경색 투명 */
+        color: #000; /* 아이콘 색상 검정 */
+        border: none; /* 검정색 테두리 */
+        padding: 6px 10px; /* 작은 여백 */
+        font-size: 1.2rem; /* 아이콘 크기 작게 */
+        border-radius: 50%; /* 원형 버튼 */
+        display: flex; /* 아이콘 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+        justify-content: center; /* 수평 중앙 정렬 */
+        cursor: pointer; /* 포인터 모양으로 변경 */
+        transition: transform 0.2s ease; /* 호버 시 효과 */
+      }
+
+      /* 호버 시 간단한 효과 */
+      .btn-remove-to-playlist:hover {
+        transform: scale(1.2); /* 버튼 크기 살짝 커짐 */
+      }
+
+      /* 클릭 시 효과 */
+      .btn-remove-to-playlist:active {
+        transform: scale(0.95); /* 클릭 시 버튼 크기 축소 */
+      }
+
+      /* 버튼 포커스 스타일 (키보드 접근성) */
+      .btn-remove-to-playlist:focus {
+        outline: none; /* 기본 아웃라인 제거 */
+      }
+
+      .music-list td form {
+        display: flex; /* flexbox로 중앙 정렬 */
+        justify-content: center; /* 수평 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+        margin: 0; /* 기본 여백 제거 */
+      }
+
+    </style>
+  </th:block>
+
+  <th:block layout:fragment="script">
+    <script>
+      function sortMusic() {
+        const selectedSort = document.getElementById("sortSelect").value;
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('page', 1);
+        urlParams.set('sort', selectedSort);
+        window.location.search = urlParams.toString();
+      }
+    </script>
+  </th:block>
+</head>
+<body>
+<!-- Content -->
+<div layout:fragment="content">
+  <!-- 1번 My Music 콘텐츠 -->
+  <div>
+    <div class="d-flex justify-content-between">
+      <h2>내 음악 목록 <i class="fa-solid fa-music"></i></h2>
+    </div>
+    <table class="music-list">
+    <thead>
+    <tr>
+      <th>번호</th>
+      <th>곡정보</th>
+      <th>앨범</th>
+      <th>삭제</th>
+    </tr>
+    </thead>
+    <tbody th:each="music : ${musics}">
+    <tr>
+      <td th:text="${music.idx}"></td>
+      <td class="music-info">
+        <img th:src="@{/img/album/{image}(image=${music.image})}" alt="앨범 이미지">
+        <div class="music-details">
+          <div class="music-title">
+            <a th:href="@{/music/{idx}(idx=${music.idx})}" th:text="${music.title}"></a>
+          </div>
+          <div class="music-singer">
+            <a th:href="@{/artist/{singer}(singer=${music.singer})}" th:text="${music.singer}"></a>
+          </div>
+        </div>
+      </td>
+      <td th:text="${music.album}"></td>
+      <!-- 페이지 상단에 알림 메시지 표시 영역 추가 -->
+      <div id="global-alert" class="alert" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; background-color: #4CAF50; color: white; border-radius: 5px; z-index: 1000;">
+      </div>
+
+      <td>
+        <form id="remove-form-{{music.idx}}">
+          <input type="hidden" name="musicId" th:value="${music.idx}" />
+          <button type="submit" class="btn-remove-to-playlist">
+            <i class="fa-solid fa-trash"></i> <!-- 삭제 아이콘 -->
+          </button>
+        </form>
+      </td>
+
+      <script>
+        document.querySelectorAll('form[id^="remove-form-"]').forEach(form => {
+          form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const button = this.querySelector('button');
+            button.disabled = true;
+            const musicId = this.querySelector('input[name="musicId"]').value;
+
+            // 중복 처리 방지
+            if (this.classList.contains('submitted')) {
+              return;
+            }
+
+            this.classList.add('submitted');
+
+            fetch('/removeMyMusic', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: new URLSearchParams({
+                'musicId': musicId
+              })
+            })
+                    .then(response => response.json())
+                    .then(data => {
+                      alert(data.message);
+                      this.closest('tr').remove();  // 테이블에서 삭제된 항목 업데이트
+                    })
+                    .catch(error => {
+                      alert('음악 삭제 중 오류 발생: ' + error);
+                      button.disabled = false;
+                      this.classList.remove('submitted');
+                    });
+          });
+        });
+
+      </script>
+    </tr>
+    </tbody>
+  </table>
+
+
+  </div>
+</div>
+</body>
+</html>
