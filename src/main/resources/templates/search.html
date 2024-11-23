@@ -5,7 +5,7 @@
       layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Artist Info</title>
+    <title>Search Result</title>
     <!-- index.html 고유 CSS 추가 -->
     <th:block layout:fragment="css">
         <!--    <link rel="stylesheet" th:href="@{/css/page/home.css}" >-->
@@ -14,86 +14,85 @@
                 margin-bottom: 20px;
             }
 
-            .artist-info {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 20px;
-                background-color: #f8f9fa; /* 밝은 배경 */
-                border-radius: 10px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
-                max-width: auto;
-                margin: 0 auto;
-            }
-
-            .artist-details {
-                display: flex;
-                align-items: center;
-                gap: 20px;
-            }
-
-            .artist-image {
-                width: 120px;
-                height: 120px;
-                border-radius: 50%; /* 이미지 원형 */
-                object-fit: cover; /* 이미지 크기 유지 */
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 이미지 그림자 */
-            }
-
-            .artist-text {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .artist-name {
-                font-size: 1.8rem;
-                font-weight: bold;
-                margin: 0;
-                color: #333;
-            }
-
-            p {
-                margin: 0;
-                font-size: 1rem;
-                color: #555;
-            }
-
-            strong {
-                font-weight: bold;
-                color: #000;
-            }
-
             .d-flex {
                 display: flex;
                 align-items: center; /* 수직 중앙 정렬 */
-            }
-
-            .justify-content-between {
-                justify-content: space-between; /* 양쪽 끝으로 배치 */
             }
 
             h2 {
                 margin-left: 10px; /* 왼쪽 여백 추가 */
             }
 
-            .sort-dropdown {
-                padding: 8px 12px; /* 드롭다운 내부 여백 키움 */
-                font-size: 1rem; /* 글자 크기 약간 증가 */
-                border-radius: 6px; /* 모서리 둥글게 */
-                border: 1px solid #ddd; /* 기본 테두리 */
-                background-color: #fff; /* 배경색 */
-                outline: none; /* 포커스 시 기본 외곽선 제거 */
-                transition: border-color 0.3s ease; /* 부드러운 전환 */
+            /* 아티스트 섹션 제목 스타일 */
+            .artist-section-title {
             }
 
-            .sort-dropdown:hover {
-                border-color: #007bff; /* 호버 시 테두리 강조 */
+            /* 아티스트 리스트 그리드 레이아웃 */
+            .artist-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 최소 200px */
+                gap: 20px; /* 카드 간격 */
+                padding: 10px 20px; /* 리스트 내부 여백 */
             }
 
-            .sort-dropdown:focus {
-                border-color: #0056b3; /* 포커스 시 테두리 색상 변경 */
-                box-shadow: 0 0 4px rgba(0, 91, 179, 0.25); /* 포커스 시 부드러운 그림자 */
+            /* 개별 아티스트 카드 */
+            .artist-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                background-color: #ffffff; /* 카드 배경 흰색 */
+                border: 1px solid #ddd; /* 옅은 테두리 */
+                border-radius: 10px; /* 둥근 모서리 */
+                overflow: hidden; /* 이미지가 넘어가지 않도록 */
+                text-align: center;
+                padding: 15px;
+                transition: transform 0.2s ease, box-shadow 0.2s ease; /* 부드러운 호버 효과 */
+                cursor: pointer;
+            }
+
+            .artist-item:hover {
+                transform: scale(1.05); /* 살짝 확대 */
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* 호버 시 그림자 효과 */
+            }
+
+            /* 링크 기본 밑줄 제거 */
+            .artist-item a {
+                text-decoration: none; /* 밑줄 제거 */
+                color: inherit; /* 텍스트 색상 상속 */
+            }
+
+            .artist-item a:hover {
+                color: inherit; /* 호버 시에도 텍스트 색상 유지 */
+            }
+
+            /* 아티스트 이미지 스타일 */
+            .artist-image {
+                width: 100px; /* 이미지 크기 */
+                height: 100px;
+                object-fit: cover; /* 비율 유지 */
+                border-radius: 50%; /* 원형 이미지 */
+                margin-bottom: 15px;
+                border: 2px solid #ddd; /* 이미지 테두리 */
+            }
+
+            /* 아티스트 정보 컨테이너 */
+            .artist-info {
+                margin-top: 10px;
+            }
+
+            /* 아티스트 이름 스타일 */
+            .artist-name {
+                font-size: 1.1em;
+                font-weight: bold;
+                margin: 0;
+                color: #333;
+            }
+
+            /* 아티스트 소속사 정보 */
+            .artist-agency {
+                font-size: 0.9em;
+                color: #666; /* 보조 텍스트 색상 */
+                margin-top: 5px;
             }
 
             /* 테이블 스타일 */
@@ -238,19 +237,17 @@
                 border-color: #aaa;
                 pointer-events: none; /* 비활성화된 버튼은 클릭 불가 */
             }
+
+            .caution {
+                text-align: center; /* 텍스트 중앙 정렬 */
+            }
         </style>
     </th:block>
     <!-- index.html 고유 스크립트 추가 -->
     <th:block layout:fragment="script">
         <!--    <script th:src="@{/js/page/home.js}"></script>-->
         <script>
-            function sortMusic() {
-              const selectedSort = document.getElementById("sortSelect").value;
-              const urlParams = new URLSearchParams(window.location.search);
-              urlParams.set('page', 1);
-              urlParams.set('sort', selectedSort);
-              window.location.search = urlParams.toString();
-            }
+
         </script>
     </th:block>
 </head>
@@ -259,28 +256,30 @@
 <div layout:fragment="content">
     <div>
         <div class="section">
-            <h2>아티스트 정보</h2>
-            <div th:if="${artist != null}" class="artist-info">
-                <div class="artist-details">
-                    <img class="artist-image" th:src="@{/img/artist/{image}(image=${artist.image})}" alt="Artist Image"/>
-                    <div class="artist-text">
-                        <h2 th:text="${artist.singer}" class="artist-name">가수 이름</h2>
-                        <p><strong>데뷔일:</strong> <span th:text="${artist.debutDate}">데뷔일</span></p>
-                        <p><strong>소속사:</strong> <span th:text="${artist.agency}">소속사</span></p>
-                    </div>
+            <h2 class="artist-section-title">아티스트 (<span th:text="${totalArtistItems}"></span>)</h2>
+            <div class="artist-list">
+                <div class="artist-item" th:each="artist : ${artists}">
+                    <a th:href="@{/artist/{singer}(singer=${artist.singer})}">
+                        <img class="artist-image"
+                             th:src="@{/img/artist/{image}(image=${artist.image})}"
+                             alt="아티스트 이미지">
+                        <div class="artist-info">
+                            <h3 class="artist-name" th:text="${artist.singer}"></h3>
+                            <p class="artist-agency" th:text="${artist.agency}"></p>
+                        </div>
+                    </a>
                 </div>
+            </div>
+            <div class="caution" th:if="${#lists.isEmpty(artists)}">
+                <h3>
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem;"></i>
+                    <br>
+                    검색 결과가 없습니다.
+                </h3>
             </div>
         </div>
         <div class="section">
-            <div class="d-flex justify-content-between">
-                <h2>곡 (<span th:text="${totalItems}"></span>)</h2>
-                <select id="sortSelect" class="sort-dropdown" onchange="sortMusic()">
-                    <option value="releaseDate" th:selected="${selectedSort == 'releaseDate'}">발매일순</option>
-                    <option value="ranking" th:selected="${selectedSort == 'ranking'}">인기순</option>
-                    <option value="title" th:selected="${selectedSort == 'title'}">제목순</option>
-                    <option value="hits" th:selected="${selectedSort == 'hits'}">조회수순</option>
-                </select>
-            </div>
+            <h2>곡 (<span th:text="${totalMusicItems}"></span>)</h2>
             <table class="music-list">
                 <thead>
                 <tr>
@@ -318,11 +317,11 @@
                 </tbody>
             </table>
 
-            <!-- 페이징 네비게이션 -->
-            <div class="pagination">
+            <!-- 페이징 네비게이션 (musics가 있을 때만 보여짐) -->
+            <div class="pagination" th:if="${!#lists.isEmpty(musics)}">
                 <!-- 이전 버튼 -->
                 <div th:if="${currentPage > 1}">
-                    <a th:href="@{/artist/{singer}(singer=${artist.singer}, page=${currentPage - 1}, size=5, sort=${selectedSort})}" th:text="'이전'"></a>
+                    <a th:href="@{ /search(keyword=${keyword}, page=${currentPage - 1}, size=5, sort=${selectedSort}) }" th:text="'이전'"></a>
                 </div>
                 <div th:if="${currentPage == 1}">
                     <a class="disabled" th:text="'이전'"></a>
@@ -330,19 +329,27 @@
 
                 <!-- 페이지 번호 버튼 -->
                 <div th:each="i : ${#numbers.sequence(1, totalPages)}">
-                    <a th:href="@{/artist/{singer}(singer=${artist.singer}, page=${i}, size=5, sort=${selectedSort})}"
+                    <a th:href="@{ /search(keyword=${keyword}, page=${i}, size=5, sort=${selectedSort}) }"
                        th:classappend="${i == currentPage ? 'active' : ''}"
                        th:text="${i}"></a>
                 </div>
 
                 <!-- 다음 버튼 -->
                 <div th:if="${currentPage < totalPages}">
-                    <a th:href="@{/artist/{singer}(singer=${artist.singer}, page=${currentPage + 1}, size=5, sort=${selectedSort})}" th:text="'다음'"></a>
+                    <a th:href="@{ /search(keyword=${keyword}, page=${currentPage + 1}, size=5, sort=${selectedSort}) }" th:text="'다음'"></a>
                 </div>
                 <div th:if="${currentPage == totalPages}">
                     <a class="disabled" th:text="'다음'"></a>
                 </div>
             </div>
+        </div>
+        <!-- 검색 결과가 없을 경우 경고 메시지 -->
+        <div class="caution" th:if="${#lists.isEmpty(musics)}">
+            <h3>
+                <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem;"></i>
+                <br>
+                검색 결과가 없습니다.
+            </h3>
         </div>
     </div>
 </div>

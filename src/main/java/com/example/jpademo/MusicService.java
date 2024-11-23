@@ -18,4 +18,5 @@ public interface MusicService {
 
     Object searchByKeyword(String keyword);
 
+    List<MusicDTO> searchMusicByKeyword(String keyword);
 }

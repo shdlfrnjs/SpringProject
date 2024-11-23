@@ -59,7 +59,7 @@ public class CrudController {
         return "redirect:/music";
     }
 
-    @RequestMapping("/music/search")
+    /*@RequestMapping("/music/search")
     public String search(@RequestParam("keyword") String keyword, Model model) {
         if (keyword == null || keyword.isEmpty()) {
             model.addAttribute("musics", musicService.findAll());
@@ -67,6 +67,6 @@ public class CrudController {
             model.addAttribute("musics", musicService.searchByKeyword(keyword));
         }
         return "list";
-    }
+    }*/
 
 }

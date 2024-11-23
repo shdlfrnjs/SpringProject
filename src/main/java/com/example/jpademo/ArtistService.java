@@ -55,4 +55,9 @@ public class ArtistService {
                 .collect(Collectors.toList());
     }
 
+    public List<Artist> searchArtistByKeyword(String keyword) {
+        return artistRepository
+                .findBySingerContainingIgnoreCaseOrderByRelevance(keyword); // `relevance` 기준 정렬
+    }
+
 }

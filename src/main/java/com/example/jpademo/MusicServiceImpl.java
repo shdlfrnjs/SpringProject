@@ -75,4 +75,11 @@ public class MusicServiceImpl implements MusicService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<MusicDTO> searchMusicByKeyword(String keyword) {
+        return musicRepository.findByTitleContainingIgnoreCaseOrderByRelevance(keyword).stream()
+                .map(Utils::toDTO) // `Utils::toDTO`는 Entity -> DTO 변환 로직
+                .collect(Collectors.toList());
+    }
+
 }

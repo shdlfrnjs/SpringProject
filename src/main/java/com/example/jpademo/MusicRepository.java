@@ -19,4 +19,8 @@ public interface MusicRepository extends JpaRepository<Music, Long> {
     @Query("UPDATE Music m SET m.hits = m.hits + 1 WHERE m.idx = :idx")
     void incrementHits(@Param("idx") long idx);
 
+    @Query("SELECT m FROM Music m WHERE LOWER(m.title) LIKE LOWER(CONCAT('%', :keyword, '%')) ORDER BY " +
+            "CASE WHEN LOWER(m.title) LIKE LOWER(:keyword) THEN 1 ELSE 2 END, m.hits DESC")
+    List<Music> findByTitleContainingIgnoreCaseOrderByRelevance(@Param("keyword") String keyword);
+
 }

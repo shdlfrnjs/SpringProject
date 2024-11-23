@@ -7,6 +7,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Layout</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- jQuery UI CSS -->
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+  <!-- jQuery (필수) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- jQuery UI (autocomplete 기능을 포함한 JS) -->
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
   <!-- content script -->
   <th:block layout:fragment="css"></th:block>
   <!-- content script -->
@@ -162,6 +172,33 @@
         background-color: #555; /* 호버 시 색상 변경 */
     }
   </style>
+  <script>
+      $(document).ready(function() {
+          $(".search-input").autocomplete({
+              source: function(request, response) {
+                  $.ajax({
+                      url: "/getSearchSuggestions",  // 서버의 자동완성 API URL
+                      type: "GET",
+                      data: {
+                          term: request.term  // 사용자가 입력한 검색어
+                      },
+                      success: function(data) {
+                          response(data);  // 서버로부터 받은 자동완성 데이터를 response로 전달
+                      },
+                      error: function() {
+                          console.error("자동완성 데이터 로드 실패");
+                      }
+                  });
+              },
+              minLength: 2,  // 최소 입력 길이 (2글자부터 자동완성 시작)
+              autoFocus: true,  // 자동완성 항목을 자동으로 선택
+              focus: function(event, ui) {
+                  // 방향키로 항목을 선택할 때 텍스트 필드의 내용이 변경되지 않도록 처리
+                  return false;  // 기본 동작을 막음
+              }
+          });
+      });
+  </script>
 </head>
 <body>
 
@@ -172,8 +209,8 @@
     </h1>
   </div>
   <div class="search">
-    <form class="search-group" action="/music/search" method="get">
-      <input name="keyword" class="search-input" placeholder="검색어 입력" type="text" aria-label="검색어 입력" autocomplete="off">
+    <form class="search-group" action="/search" method="get">
+      <input th:value="${keyword}" name="keyword" class="search-input" placeholder="검색어 입력" type="text" aria-label="검색어 입력" autocomplete="off" required>
       <button class="btn search-btn" type="submit">
         <i class="fas fa-search"></i>
       </button>
