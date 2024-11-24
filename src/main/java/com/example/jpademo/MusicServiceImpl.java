@@ -63,6 +63,37 @@ public class MusicServiceImpl implements MusicService {
                 .collect(Collectors.toList());
     }
 
+    // 장르별 음악을 가져오는 메서드
+    @Override
+    public List<MusicDTO> getMusicsByGenre(String sort, String genre) {
+        // Genre에 해당하는 음악 리스트를 가져옴
+        List<Music> musics = musicRepository.findByGenre(genre);
+
+        // Music 객체를 DTO로 변환하여 반환
+        return musics.stream()
+                .map(Utils::toDTO) // Music -> MusicDTO 변환
+                .sorted((music1, music2) -> {
+                    switch (sort) {
+                        case "releaseDate":
+                            // releaseDate 최신순으로 정렬 (내림차순)
+                            return music2.getReleaseDate().compareTo(music1.getReleaseDate());
+                        case "ranking":
+                            // ranking 순으로 정렬 (오름차순)
+                            return Integer.compare(music1.getRanking(), music2.getRanking());
+                        case "hits":
+                            // hits 높은 순으로 정렬 (내림차순)
+                            return Integer.compare(music2.getHits(), music1.getHits());
+                        case "title":
+                            // title 알파벳 순으로 정렬 (오름차순)
+                            return music1.getTitle().compareTo(music2.getTitle());
+                        default:
+                            // 기본 정렬: releaseDate 최신순
+                            return music2.getReleaseDate().compareTo(music1.getReleaseDate());
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
     @Override
     public MusicDTO findById(long idx) {
         return musicRepository.findById(idx)

@@ -12,6 +12,8 @@ public interface MusicService {
 
     List<MusicDTO> getNewMusics(int limit);
 
+    List<MusicDTO> getMusicsByGenre(String sort, String genre);
+
     MusicDTO findById(long idx);
 
     void incrementHits(long idx);

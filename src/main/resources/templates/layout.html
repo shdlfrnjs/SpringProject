@@ -30,22 +30,31 @@
     }
 
     .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      margin: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        margin: 10px;
     }
 
     .logo {
-      flex: 0 0 auto;
-      margin-left: 10px;
+        flex: 0 0 auto;
+        margin-left: 10px;
+    }
+
+    .logo a {
+        color: #1DB954; /* 스포티파이 초록색 */
+        text-decoration: none; /* 링크 밑줄 제거 */
+    }
+
+    .logo a:hover {
+        color: #1DB954; /* 마우스 오버 시에도 스포티파이 초록색 */
     }
 
     .search {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .search-group {
@@ -106,48 +115,48 @@
     }
 
     .tab-menu {
-      flex: 0 0 20%;
-      background-color: #f9f9f9;
-      border: 1px solid #ddd;
-      padding: 10px;
-      box-sizing: border-box;
-      align-self: flex-start; /* 탭 메뉴 높이를 콘텐츠 영역과 독립적으로 설정 */
+        flex: 0 0 20%;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 10px;
+        box-sizing: border-box;
+        align-self: flex-start; /* 탭 메뉴 높이를 콘텐츠 영역과 독립적으로 설정 */
     }
 
     .tab-menu ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+        list-style: none;
+        padding: 0;
+        margin: 0;
     }
 
     .tab-menu .menu-item {
-      margin-bottom: 15px;
+        margin-bottom: 15px;
     }
 
     .tab-menu .menu-item > h4 {
-      margin-bottom: 10px;
-      color: #333;
-      font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+        font-weight: bold;
     }
 
     .tab-menu .submenu {
-      padding-left: 15px;
+        padding-left: 15px;
     }
 
     .tab-menu .submenu li {
-      margin-bottom: 5px;
+        margin-bottom: 5px;
     }
 
     .tab-menu .submenu li a {
-      text-decoration: none;
-      color: #333;
-      padding: 5px 0;
-      display: block;
-      font-weight: normal;
+        text-decoration: none;
+        color: #333;
+        padding: 5px 0;
+        display: block;
+        font-weight: normal;
     }
 
     .tab-menu .submenu li a:hover {
-      color: #007BFF;
+        color: #007BFF;
     }
 
     /* 스크롤바 스타일 */
@@ -232,11 +241,11 @@
         <h4>장르</h4>
         <hr>
         <ul class="submenu">
-          <li><a href="#"><i class="fa-solid fa-minus"> POP</i></a></li>
-          <li><a href="#"><i class="fa-solid fa-minus"> 댄스</i></a></li>
-          <li><a href="#"><i class="fa-solid fa-minus"> 힙합</i></a></li>
-          <li><a href="#"><i class="fa-solid fa-minus"> 밴드</i></a></li>
-          <li><a href="#"><i class="fa-solid fa-minus"> 발라드</i></a></li>
+          <li><a href="/musics/list/POP"><i class="fa-solid fa-minus"> POP</i></a></li>
+          <li><a href="/musics/list/댄스"><i class="fa-solid fa-minus"> 댄스</i></a></li>
+          <li><a href="/musics/list/힙합"><i class="fa-solid fa-minus"> 힙합</i></a></li>
+          <li><a href="/musics/list/밴드"><i class="fa-solid fa-minus"> 밴드</i></a></li>
+          <li><a href="/musics/list/발라드"><i class="fa-solid fa-minus"> 발라드</i></a></li>
         </ul>
         <h4>For You</h4>
         <hr>
