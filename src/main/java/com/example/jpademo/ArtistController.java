@@ -54,6 +54,7 @@ public class ArtistController {
         model.addAttribute("selectedSort", sort); // 현재 선택된 정렬 기준 저장
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startIndex", fromIndex + 1);
 
         return "artist";
     }

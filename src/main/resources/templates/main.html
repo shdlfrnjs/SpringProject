@@ -237,9 +237,9 @@
           <th>담기</th>
         </tr>
         </thead>
-        <tbody th:each="music : ${musics}">
+        <tbody th:each="music, iterStat : ${musics}">
         <tr>
-          <td th:text="${music.idx}"></td>
+          <td th:text="${startIndex + iterStat.index}"></td>
           <td class="music-info">
             <img th:src="@{/img/album/{image}(image=${music.image})}" alt="앨범 이미지">
             <div class="music-details">

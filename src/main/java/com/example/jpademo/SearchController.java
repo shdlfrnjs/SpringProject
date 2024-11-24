@@ -50,6 +50,7 @@ public class SearchController {
         model.addAttribute("musics", musics);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startIndex", fromIndex + 1);
 
         // 검색 결과 페이지 반환
         return "search"; // `search.html` 뷰로 이동
