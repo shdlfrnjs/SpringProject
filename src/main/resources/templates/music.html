@@ -146,10 +146,56 @@
                 <p><strong>조회수:</strong> <span th:text="${music.hits}">조회수</span></p>
             </div>
             <div class="btn-container">
-                <button class="btn-add-to-playlist">
+                <button class="btn-add-to-playlist" id="add-to-playlist-btn">
                     <i class="fa-solid fa-plus"> Add to PlayList</i>
                 </button>
             </div>
+
+            <script>
+                // URL에서 music.idx 추출
+                const musicIdx = window.location.pathname.split('/').pop();
+
+                // musicIdx를 버튼의 data-music-id에 설정
+                const button = document.getElementById('add-to-playlist-btn');
+                button.setAttribute('data-music-id', musicIdx);
+
+                button.addEventListener('click', function (event) {
+                    event.preventDefault();
+
+                    // 데이터 속성에서 musicIdx 값을 가져와 숫자로 변환
+                    const musicIdx = Number(button.getAttribute('data-music-id'));
+
+                    if (isNaN(musicIdx)) {
+                        alert('유효한 음악 ID가 아닙니다.');
+                        return;
+                    }
+
+                    button.disabled = true;
+
+                    const formData = new FormData();
+                    formData.append('musicId', musicIdx); // musicIdx를 formData에 추가
+
+                    fetch('/addMyMusic', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.message) {
+                                alert(data.message);
+                            } else {
+                                alert('음악을 추가하는 데 실패했습니다.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('음악을 추가하는 데 실패했습니다.');
+                        })
+                        .finally(() => {
+                            button.disabled = false;
+                        });
+                });
+            </script>
         </div>
     </div>
 </div>

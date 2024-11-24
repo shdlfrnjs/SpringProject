@@ -19,11 +19,30 @@ public class PlaylistController {
     private MusicService musicService;
 
     @GetMapping("/mymusic")
-    public String playlistPage(Model model) {
-        List<Long> musicIds = playlistService.getMusicIdxInPlaylist();
-        List<MusicDTO> musics = musicService.getMusicsByIdx(musicIds);
+    public String playlistPage(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            Model model) {
 
-        model.addAttribute("musics", musics);
+        List<Long> musicIds = playlistService.getMusicIdxByCategory("mymusic");
+
+        List<MusicDTO> allMusics = musicService.getMusicsByIdx(musicIds);
+
+        int totalItems = allMusics.size();
+        model.addAttribute("totalItems", totalItems);
+
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+        model.addAttribute("totalPages", totalPages);
+
+        int fromIndex = Math.max((page - 1) * size, 0);  // 최소값을 0으로 제한
+        int toIndex = Math.min(fromIndex + size, totalItems);
+
+        List<MusicDTO> paginatedMusics = allMusics.subList(fromIndex, toIndex);
+
+        model.addAttribute("musics", paginatedMusics);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("size", size);
+
         return "mymusic";
     }
 

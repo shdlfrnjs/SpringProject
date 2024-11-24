@@ -129,19 +129,43 @@
         margin: 0; /* 기본 여백 제거 */
       }
 
-    </style>
-  </th:block>
-
-  <th:block layout:fragment="script">
-    <script>
-      function sortMusic() {
-        const selectedSort = document.getElementById("sortSelect").value;
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('page', 1);
-        urlParams.set('sort', selectedSort);
-        window.location.search = urlParams.toString();
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        gap: 5px;
       }
-    </script>
+
+      .pagination a {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 0 4px;
+        color: black;
+        text-decoration: none;
+        border: 1px solid black;
+        border-radius: 4px;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .pagination a:hover {
+        background-color: black;
+        color: white;
+      }
+
+      .pagination a.active {
+        background-color: black;
+        color: white;
+        pointer-events: none; /* 활성화된 페이지는 클릭 불가 */
+      }
+
+      .pagination a.disabled {
+        color: #aaa;
+        border-color: #aaa;
+        pointer-events: none; /* 비활성화된 버튼은 클릭 불가 */
+      }
+
+    </style>
   </th:block>
 </head>
 <body>
@@ -150,7 +174,7 @@
   <!-- 1번 My Music 콘텐츠 -->
   <div>
     <div class="d-flex justify-content-between">
-      <h2>내 음악 목록 <i class="fa-solid fa-music"></i></h2>
+      <h2>내가 담은 음악 <i class="fa-solid fa-music"></i></h2>
     </div>
     <table class="music-list">
     <thead>
@@ -161,9 +185,9 @@
       <th>삭제</th>
     </tr>
     </thead>
-    <tbody th:each="music : ${musics}">
+      <tbody th:each="music, iterStat : ${musics}">
     <tr>
-      <td th:text="${music.idx}"></td>
+      <td th:text="${(currentPage - 1) * size + iterStat.index + 1}"></td>
       <td class="music-info">
         <img th:src="@{/img/album/{image}(image=${music.image})}" alt="앨범 이미지">
         <div class="music-details">
@@ -231,7 +255,30 @@
     </tr>
     </tbody>
   </table>
+    <!-- 페이징 네비게이션 -->
+    <div class="pagination">
+      <!-- 이전 버튼 -->
+      <div th:if="${currentPage > 1}">
+        <a th:href="@{ /mymusic(page=${currentPage - 1}, size=10, sort=${selectedSort}) }" th:text="'이전'"></a>
+      </div>
+      <div th:if="${currentPage == 1}">
+        <a class="disabled" th:text="'이전'"></a>
+      </div>
 
+      <!-- 페이지 번호 버튼 -->
+      <div th:each="i : ${#numbers.sequence(1, totalPages)}">
+        <a th:href="@{ /mymusic(page=${i}, size=10, sort=${selectedSort}) }" th:classappend="${i == currentPage ? 'active' : ''}" th:text="${i}"></a>
+      </div>
+
+      <!-- 다음 버튼 -->
+      <div th:if="${currentPage < totalPages}">
+        <a th:href="@{ /mymusic(page=${currentPage + 1}, size=10, sort=${selectedSort}) }" th:text="'다음'"></a>
+      </div>
+      <div th:if="${currentPage == totalPages}">
+        <a class="disabled" th:text="'다음'"></a>
+      </div>
+    </div>
+  </div>
 
   </div>
 </div>

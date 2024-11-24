@@ -308,12 +308,50 @@
                     <td th:text="${music.album}"></td>
                     <td th:text="${music.hits}"></td>
                     <td>
-                        <div class="btn-container">
-                            <button class="btn-add-to-playlist">
+                        <form class="addToPlaylistForm" th:action="@{/addMyMusic}" method="post">
+                            <input type="hidden" name="musicId" th:value="${music.idx}"/>
+                            <button type="submit" class="btn-add-to-playlist">
                                 <i class="fa-solid fa-plus"></i>
                             </button>
-                        </div>
+                        </form>
                     </td>
+                    <script>
+                        document.querySelectorAll('.addToPlaylistForm').forEach(function(form) {
+                            // 이벤트리스너 중복 방지
+                            if (!form.dataset.listenerAttached) {
+                                form.addEventListener('submit', function(event) {
+                                    event.preventDefault();
+
+                                    const formData = new FormData(form);
+                                    const submitButton = form.querySelector('button[type="submit"]');
+
+                                    // 버튼 비활성화 (중복 제출 방지)
+                                    submitButton.disabled = true;
+
+                                    fetch(form.action, {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.message) {
+                                                alert(data.message);
+                                            } else {
+                                                alert('음악을 추가하는 데 실패했습니다.');
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Error:', error);
+                                            alert('음악을 추가하는 데 실패했습니다.');
+                                        })
+                                        .finally(() => {
+                                            submitButton.disabled = false;
+                                        });
+                                });
+                                form.dataset.listenerAttached = "true";
+                            }
+                        });
+                    </script>
                 </tr>
                 </tbody>
             </table>

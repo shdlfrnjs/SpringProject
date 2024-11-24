@@ -57,10 +57,8 @@ public class PlaylistService {
     }
 
 
-
-
-
-
-
+    public List<Long> getMusicIdxByCategory(String category) {
+        return playlistRepository.findMusicIdxByCategory(category);
+}
 
 }
