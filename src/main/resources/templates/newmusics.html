@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>New musics</title>
+    <!-- index.html 고유 CSS 추가 -->
+    <th:block layout:fragment="css">
+        <!--    <link rel="stylesheet" th:href="@{/css/page/home.css}" >-->
+        <style>
+            .popular-music-section {
+                text-align: center;
+                padding-bottom: 10px;
+            }
+
+            h2 {
+                margin-top: 10px; /* 왼쪽 여백 추가 */
+                margin-bottom: 20px; /* 왼쪽 여백 추가 */
+            }
+
+            .popular-music-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px; /* 카드 간격 */
+                justify-content: center;
+            }
+
+            .music-card {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                background-color: #f8f9fa;
+                border: 1px solid #ddd;
+                border-radius: 10px;
+                width: 180px;
+                padding: 10px;
+                text-align: center;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .music-card:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .music-release-date {
+                font-size: 1rem;
+                color: #000;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+
+            .music-image {
+                width: 80px; /* 이미지 크기 설정 */
+                height: 80px;
+                border-radius: 10px;
+                object-fit: cover;
+                margin-bottom: 10px;
+            }
+
+            .music-title {
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 5px;
+                font-size: 0.9rem;
+                white-space: nowrap; /* 텍스트가 한 줄로 유지되도록 */
+                overflow: hidden; /* 넘치는 부분은 숨기기 */
+                text-overflow: ellipsis; /* 넘치는 텍스트를 "..."으로 표시 */
+            }
+
+            .music-title a {
+                text-decoration: none;
+                color: #333;
+            }
+
+            .music-title a:hover {
+                color: #007bff;
+            }
+
+            .music-singer {
+                font-size: 0.8rem; /* 텍스트 크기 축소 */
+                color: #6c757d;
+                margin-bottom: 10px;
+            }
+
+            .music-singer a {
+                text-decoration: none;
+                color: #6c757d;
+            }
+
+            .music-singer a:hover {
+                color: #0056b3;
+            }
+
+            .btn-add-to-playlist {
+                background-color: #000;
+                color: #fff;
+                border: none;
+                padding: 5px 10px; /* 버튼 크기 축소 */
+                border-radius: 10px;
+                font-size: 0.8rem; /* 버튼 텍스트 크기 축소 */
+                cursor: pointer;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+            }
+
+            .btn-add-to-playlist:hover {
+                background-color: #555;
+                transform: scale(1.1);
+            }
+        </style>
+    </th:block>
+    <!-- index.html 고유 스크립트 추가 -->
+    <th:block layout:fragment="script">
+        <!--    <script th:src="@{/js/page/home.js}"></script>-->
+
+    </th:block>
+</head>
+<body>
+<!-- Content -->
+<div layout:fragment="content">
+    <div class="popular-music-section">
+        <h2><i class="fa-solid fa-record-vinyl"></i>  최신 음악</h2>
+        <div class="popular-music-list">
+            <div class="music-card" th:each="music, iterStat : ${musics}">
+                <!-- 발매일 표시 -->
+                <div class="music-release-date">
+                    <span th:text="${#temporals.format(music.releaseDate, 'yyyy.M.d')}"></span>
+                </div>
+                <img class="music-image" th:src="@{/img/album/{image}(image=${music.image})}" alt="앨범 이미지">
+                <div class="music-title">
+                    <a th:href="@{/music/{idx}(idx=${music.idx})}" th:text="${music.title}"></a>
+                </div>
+                <div class="music-singer">
+                    <a th:href="@{/artist/{singer}(singer=${music.singer})}" th:text="${music.singer}"></a>
+                </div>
+                <form class="addToPlaylistForm" th:action="@{/addMyMusic}" method="post">
+                    <input type="hidden" name="musicId" th:value="${music.idx}"/>
+                    <button type="submit" class="btn-add-to-playlist">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </form>
+                <script>
+                    document.querySelectorAll('.addToPlaylistForm').forEach(function(form) {
+                        // 이벤트리스너 중복 방지
+                        if (!form.dataset.listenerAttached) {
+                            form.addEventListener('submit', function(event) {
+                                event.preventDefault();
+
+                                const formData = new FormData(form);
+                                const submitButton = form.querySelector('button[type="submit"]');
+
+                                // 버튼 비활성화 (중복 제출 방지)
+                                submitButton.disabled = true;
+
+                                fetch(form.action, {
+                                    method: 'POST',
+                                    body: formData
+                                })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.message) {
+                                            alert(data.message);
+                                        } else {
+                                            alert('음악을 추가하는 데 실패했습니다.');
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        alert('음악을 추가하는 데 실패했습니다.');
+                                    })
+                                    .finally(() => {
+                                        submitButton.disabled = false;
+                                    });
+                            });
+                            form.dataset.listenerAttached = "true";
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

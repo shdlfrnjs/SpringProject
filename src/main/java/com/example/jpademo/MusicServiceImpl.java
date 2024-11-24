@@ -29,8 +29,8 @@ public class MusicServiceImpl implements MusicService {
                             // releaseDate 최신순으로 정렬 (내림차순)
                             return music2.getReleaseDate().compareTo(music1.getReleaseDate());
                         case "ranking":
-                            // ranking 높은 순으로 정렬 (내림차순)
-                            return Integer.compare(music2.getRanking(), music1.getRanking());
+                            // ranking 순으로 정렬 (오름차순)
+                            return Integer.compare(music1.getRanking(), music2.getRanking());
                         case "hits":
                             // hits 높은 순으로 정렬 (내림차순)
                             return Integer.compare(music2.getHits(), music1.getHits());
@@ -42,6 +42,24 @@ public class MusicServiceImpl implements MusicService {
                             return music2.getReleaseDate().compareTo(music1.getReleaseDate());
                     }
                 })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MusicDTO> getTopRankedMusics(int limit) {
+        return musicRepository.findAll().stream()
+                .sorted((music1, music2) -> Integer.compare(music1.getRanking(), music2.getRanking())) // 오름차순
+                .limit(limit) // 상위 limit개의 음악만 추출
+                .map(Utils::toDTO) // DTO로 변환
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MusicDTO> getNewMusics(int limit) {
+        return musicRepository.findAll().stream()
+                .sorted((music1, music2) -> music2.getReleaseDate().compareTo(music1.getReleaseDate())) // releaseDate 기준 내림차순 정렬
+                .limit(limit) // 상위 limit개의 음악만 추출
+                .map(Utils::toDTO) // DTO로 변환
                 .collect(Collectors.toList());
     }
 

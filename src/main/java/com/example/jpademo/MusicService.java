@@ -8,6 +8,10 @@ public interface MusicService {
 
     List<MusicDTO> sortedMusics(String sort);
 
+    List<MusicDTO> getTopRankedMusics(int limit);
+
+    List<MusicDTO> getNewMusics(int limit);
+
     MusicDTO findById(long idx);
 
     void incrementHits(long idx);
