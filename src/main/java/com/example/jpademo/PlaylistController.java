@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,8 +75,26 @@ public class PlaylistController {
         return response;
     }
 
+    @GetMapping("/playlist/{category}")
+    public String playlistPageByCategory(
+            @PathVariable("category") String category,
+            Model model) {
 
+        // 주어진 카테고리로 음악 ID 목록 가져오기
+        List<Long> musicIds = playlistService.getMusicIdxByCategory(category);
 
+        // 음악 ID에 해당하는 음악 정보를 가져오기
+        List<MusicDTO> musics = musicService.getMusicsByIdx(musicIds);
 
+        // 음악 리스트를 랜덤으로 섞기
+        Collections.shuffle(musics);
+
+        // model에 category와 musics를 추가
+        model.addAttribute("category", category);
+        model.addAttribute("musics", musics);
+
+        // playlist.html 뷰를 반환
+        return "playlist";
+    }
 
 }

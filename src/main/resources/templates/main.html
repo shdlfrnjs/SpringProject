@@ -11,7 +11,7 @@
     <!--    <link rel="stylesheet" th:href="@{/css/page/home.css}" >-->
     <style>
       .section {
-          margin-bottom: 20px;
+          margin-bottom: 50px;
       }
 
       .d-flex {
@@ -196,6 +196,42 @@
           border-color: #aaa;
           pointer-events: none; /* 비활성화된 버튼은 클릭 불가 */
       }
+
+      .playlist-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start; /* 이미지 상단에 텍스트가 맞춰지게 설정 */
+          flex-wrap: wrap; /* 텍스트가 이미지 크기에 맞춰 자동으로 줄 바뀌도록 설정 */
+      }
+
+      .playlist-item {
+          text-align: left; /* 텍스트가 중앙 정렬되도록 설정 */
+          max-width: 200px; /* 각 항목의 최대 너비를 설정하여 화면 크기에 맞게 자동 조정 */
+      }
+
+      .playlist-img {
+          width: 200px; /* 이미지 크기 */
+          height: 200px; /* 이미지 크기 */
+          object-fit: cover; /* 이미지를 비율에 맞게 잘라서 맞추기 */
+      }
+
+      .playlist-item p {
+          font-size: 18px; /* 텍스트 크기 조정 */
+          color: #333; /* 텍스트 색상 */
+          margin-top: 5px;
+      }
+
+      /* 링크의 기본 밑줄 제거 */
+      .playlist-item a {
+          text-decoration: none; /* 기본 밑줄 없애기 */
+      }
+
+      /* 호버 시 스타일 */
+      .playlist-item a:hover {
+          color: #000; /* 호버 시 텍스트 색 변경 (원하는 색으로 수정 가능) */
+          text-decoration: underline; /* 호버 시 밑줄 추가 */
+      }
+
     </style>
   </th:block>
   <!-- index.html 고유 스크립트 추가 -->
@@ -325,6 +361,44 @@
         </div>
         <div th:if="${currentPage == totalPages}">
           <a class="disabled" th:text="'다음'"></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2번 메인컨텐츠 (플레이리스트 추천) -->
+    <div class="section">
+      <h2>인기 플레이리스트</h2>
+
+      <div class="playlist-container">
+        <div class="playlist-item">
+          <a href="/playlist/Xmas">
+            <img th:src="@{/img/playlist/xmas.png}" alt="Xmas Playlist" class="playlist-img">
+            <p>듣기만 해도 설레는 크리스마스 캐롤 <i class="fa-solid fa-tree"></i></p>
+          </a>
+        </div>
+        <div class="playlist-item">
+          <a href="/playlist/Drive">
+            <img th:src="@{/img/playlist/drive.png}" alt="Drive Playlist" class="playlist-img">
+            <p>드라이브할때 듣는 신나는 노래</p>
+          </a>
+        </div>
+        <div class="playlist-item">
+          <a href="/playlist/Workout">
+            <img th:src="@{/img/playlist/workout.png}" alt="Workout Playlist" class="playlist-img">
+            <p>[Playlist] 헬스장에서 듣는 노래</p>
+          </a>
+        </div>
+        <div class="playlist-item">
+          <a href="/playlist/Study">
+            <img th:src="@{/img/playlist/study.png}" alt="Study Playlist" class="playlist-img">
+            <p>집중할 때 듣기좋은 잔잔한 음악</p>
+          </a>
+        </div>
+        <div class="playlist-item">
+          <a href="/playlist/Chill">
+            <img th:src="@{/img/playlist/chill.png}" alt="Chill Playlist" class="playlist-img">
+            <p>CHILL VIBES <i class="fa-regular fa-moon"></i></p>
+          </a>
         </div>
       </div>
     </div>

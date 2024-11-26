@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <meta charset="UTF-8">
+  <title>Playlist</title>
+  <!-- mymusic.html 고유 CSS 추가 -->
+  <th:block layout:fragment="css">
+    <style>
+      .d-flex {
+          display: flex;
+          align-items: center; /* 수직 중앙 정렬 */
+      }
+
+      .justify-content-between {
+          justify-content: space-between; /* 양쪽 끝으로 배치 */
+      }
+
+      h2 {
+          margin-left: 10px; /* 왼쪽 여백 추가 */
+      }
+
+      /* 테이블 스타일 */
+      .music-list {
+          width: 100%;
+          border-collapse: collapse; /* 테두리 중복 제거 */
+          margin: 0; /* 테이블 상하 여백 */
+          font-size: 1em;
+          font-family: Arial, sans-serif;
+      }
+
+      .music-list th, .music-list td {
+          padding: 10px 15px; /* 셀 안쪽 여백 */
+          text-align: center; /* 텍스트 중앙 정렬 */
+          border-bottom: 1px solid #ddd; /* 셀 아래 테두리 */
+          vertical-align: middle; /* 수직 중앙 정렬 */
+      }
+
+      .music-list thead th {
+          background-color: #f8f9fa; /* 헤더 배경색 */
+          font-weight: bold;
+          text-align: center; /* 헤더 텍스트 중앙 정렬 */
+          border-bottom: 2px solid #dee2e6; /* 헤더 테두리 강조 */
+      }
+
+      /* 곡정보 셀 스타일 */
+      .music-info {
+          display: flex; /* 이미지와 텍스트를 가로 정렬 */
+          align-items: center; /* 수직 중앙 정렬 */
+      }
+
+      .music-info img {
+          width: 60px; /* 이미지 너비 */
+          height: 60px; /* 이미지 높이 */
+          margin-right: 15px; /* 이미지와 텍스트 간 간격 */
+          border-radius: 5px; /* 이미지 둥글게 처리 */
+          object-fit: cover; /* 이미지 크기에 맞게 조정 */
+      }
+
+      .music-details {
+          text-align: left; /* 텍스트 왼쪽 정렬 */
+      }
+
+      .music-title a {
+          font-weight: bold;
+          font-size: 1.1em; /* 제목 크기 */
+          text-decoration: none; /* 링크 밑줄 제거 */
+          color: #333; /* 기본 텍스트 색상 */
+      }
+
+      .music-title a:hover {
+          color: #007bff; /* 호버 시 강조 색상 */
+      }
+
+      .music-singer a {
+          font-size: 0.9em; /* 가수 이름 크기 */
+          color: #6c757d; /* 보조 텍스트 색상 */
+          text-decoration: none; /* 링크 밑줄 제거 */
+      }
+
+      .music-singer a:hover {
+          color: #0056b3; /* 가수 링크 호버 색상 */
+      }
+
+      /* 테이블 열 스타일 */
+      .music-list td:last-child, .music-list th:last-child {
+          text-align: center; /* 마지막 열 중앙 정렬 */
+      }
+
+      .music-list tr:hover {
+          background-color: #f1f3f5; /* 행에 호버 시 배경색 */
+      }
+
+      /* 담기 버튼을 감싸는 컨테이너 스타일 */
+      .btn-container {
+          display: flex;
+          justify-content: center; /* 수평 중앙 정렬 */
+          align-items: center; /* 수직 중앙 정렬 */
+      }
+
+      /* 기본 버튼 스타일 */
+      .btn-add-to-playlist {
+          background-color: transparent; /* 배경색 투명 */
+          color: #000; /* 아이콘 색상 검정 */
+          border: none; /* 검정색 테두리 */
+          padding: 6px 10px; /* 작은 여백 */
+          font-size: 1.2rem; /* 아이콘 크기 작게 */
+          border-radius: 50%; /* 원형 버튼 */
+          display: flex; /* 아이콘 중앙 정렬 */
+          align-items: center; /* 수직 중앙 정렬 */
+          justify-content: center; /* 수평 중앙 정렬 */
+          cursor: pointer; /* 포인터 모양으로 변경 */
+          transition: transform 0.2s ease; /* 호버 시 효과 */
+      }
+
+      /* 호버 시 간단한 효과 */
+      .btn-add-to-playlist:hover {
+          transform: scale(1.2); /* 버튼 크기 살짝 커짐 */
+      }
+
+      /* 클릭 시 효과 */
+      .btn-add-to-playlist:active {
+          transform: scale(0.95); /* 클릭 시 버튼 크기 축소 */
+      }
+
+      .music-list td form {
+        display: flex; /* flexbox로 중앙 정렬 */
+        justify-content: center; /* 수평 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+        margin: 0; /* 기본 여백 제거 */
+      }
+
+      /* 버튼 포커스 스타일 (키보드 접근성) */
+      .btn-add-to-playlist:focus {
+          outline: none; /* 기본 아웃라인 제거 */
+      }
+
+    </style>
+  </th:block>
+</head>
+<body>
+<!-- Content -->
+<div layout:fragment="content">
+  <div>
+    <div>
+      <h2>
+        Playlist:
+        <span th:text="${category == 'Xmas' ? '듣기만 해도 설레는 크리스마스 캐롤' :
+                      category == 'Drive' ? '드라이브할때 듣는 신나는 노래' :
+                      category == 'Workout' ? '헬스장에서 듣는 노래' :
+                      category == 'Study' ? '집중할 때 듣기좋은 잔잔한 음악' :
+                      category == 'Chill' ? 'CHILL VIBES' : '기타'}"></span>
+        <i class="fa-solid fa-music"></i>
+      </h2>
+    </div>
+    <table class="music-list">
+      <thead>
+      <tr>
+        <th>번호</th>
+        <th>곡정보</th>
+        <th>앨범</th>
+        <th>조회수</th>
+        <th>담기</th>
+      </tr>
+      </thead>
+      <tbody th:each="music, iterStat : ${musics}">
+      <tr>
+        <td th:text="${iterStat.index + 1}"></td>
+        <td class="music-info">
+          <img th:src="@{/img/album/{image}(image=${music.image})}" alt="앨범 이미지">
+          <div class="music-details">
+            <div class="music-title">
+              <a th:href="@{/music/{idx}(idx=${music.idx})}" th:text="${music.title}"></a>
+            </div>
+            <div class="music-singer">
+              <a th:href="@{/artist/{singer}(singer=${music.singer})}" th:text="${music.singer}"></a>
+            </div>
+          </div>
+        </td>
+        <td th:text="${music.album}"></td>
+        <td th:text="${music.hits}"></td>
+        <td>
+          <form class="addToPlaylistForm" th:action="@{/addMyMusic}" method="post">
+            <input type="hidden" name="musicId" th:value="${music.idx}"/>
+            <button type="submit" class="btn-add-to-playlist">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </form>
+        </td>
+
+        <script>
+          document.querySelectorAll('.addToPlaylistForm').forEach(function(form) {
+            // 이벤트리스너 중복 방지
+            if (!form.dataset.listenerAttached) {
+              form.addEventListener('submit', function(event) {
+                event.preventDefault();  // 기본 폼 제출 동작을 막음
+
+                const formData = new FormData(form);
+                const submitButton = form.querySelector('button[type="submit"]');
+
+                // 버튼 비활성화 (중복 제출 방지)
+                submitButton.disabled = true;
+
+                fetch(form.action, {
+                  method: 'POST',
+                  body: formData
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                          if (data.message) {
+                            alert(data.message);
+                          } else {
+                            alert('음악을 추가하는 데 실패했습니다.');
+                          }
+                        })
+                        .catch(error => {
+                          console.error('Error:', error);
+                          alert('음악을 추가하는 데 실패했습니다.');
+                        })
+                        .finally(() => {
+                          submitButton.disabled = false;
+                        });
+              });
+              form.dataset.listenerAttached = "true";
+            }
+          });
+        </script>
+
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>
