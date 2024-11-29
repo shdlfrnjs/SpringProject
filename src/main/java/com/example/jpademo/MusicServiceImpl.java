@@ -3,6 +3,7 @@ package com.example.jpademo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -138,5 +139,53 @@ public class MusicServiceImpl implements MusicService {
                 .map(Utils::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<MusicDTO> getAlbumsBySinger(String mostFrequentSinger) {
+        // Music 엔티티 리스트를 가져온 후, MusicDTO로 변환하여 반환
+        return musicRepository.findBySinger(mostFrequentSinger).stream()
+                .map(Utils::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MusicDTO> getMusicsByGenre(String genre) {
+        List<Music> musics = musicRepository.findByGenre(genre);
+
+        if (musics.isEmpty()) {
+            System.out.println("해당 장르에 음악이 없습니다: " + genre);
+            return Collections.emptyList();
+        }
+
+        Collections.shuffle(musics);
+
+        // 랜덤으로 섞은 후, 상위 4곡만 선택해서 MusicDTO로 변환
+        return musics.stream()
+                .limit(4)
+                .map(Utils::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MusicDTO> getPlaylistByGenres(List<String> genres) {
+        // 장르로 엔티티 검색
+        List<Music> musicList = musicRepository.findByGenresRandomly(genres);
+
+        Collections.shuffle(musicList);
+
+        // 곡 개수가 10개 이하라면 그대로 반환
+        List<Music> selectedSongs;
+        if (musicList.size() <= 10) {
+            selectedSongs = musicList;
+        } else {
+            selectedSongs = musicList.subList(0, 10);
+        }
+
+        return selectedSongs.stream()
+                .map(Utils::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
 
 }

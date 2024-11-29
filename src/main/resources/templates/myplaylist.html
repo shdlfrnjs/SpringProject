@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>플레이리스트 생성</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- 추가 스타일 -->
+    <style>
+        a {
+            text-decoration: none; /* 밑줄 제거 */
+            color: inherit; /* 부모 요소의 색상 상속 */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .genre-selection, .playlist-results {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .genre-options label {
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        .playlist-results {
+            text-align: center;
+        }
+
+        .playlist-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px auto;
+            max-width: 1200px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .playlist-card {
+            position: relative;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            width: 180px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .playlist-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .playlist-title {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .playlist-singer {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .playlist-singer a:hover {
+            color: #0056b3;
+        }
+
+        .playlist-title a:hover {
+            color: #007bff;
+        }
+
+        .playlist-genre {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .music-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        /* 선택된 장르 버튼 스타일 */
+        .genre-options button.selected {
+            background-color: rgba(189, 189, 189, 0.56);
+            color: #000000;
+            border: 2px solid rgba(189, 189, 189, 0.56);
+        }
+
+        .genre-options button {
+            background-color: transparent;
+            color: #333;
+            border: 2px solid #ccc;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .genre-options button:hover {
+            background-color: #f0f0f0;
+            border-color: rgba(189, 189, 189, 0.56);
+        }
+
+        /* 플러스 아이콘 버튼 스타일 */
+        .add-to-playlist-btn {
+            position: absolute; /* 절대 위치 설정 */
+            top: 10px; /* 카드 상단에서 10px 위치 */
+            right: 10px; /* 카드 오른쪽에서 10px 위치 */
+            background-color: transparent; /* 투명 배경 */
+            border: none; /* 테두리 제거 */
+            font-size: 1.2rem; /* 아이콘 크기 */
+            color: #333; /* 아이콘 색상 */
+            cursor: pointer; /* 마우스 커서가 손 모양 */
+            transition: color 0.3s ease; /* 색상 변경 애니메이션 */
+        }
+
+        /* 아이콘에 마우스를 올렸을 때 색상 변화 */
+        .add-to-playlist-btn:hover {
+            color: #007bff; /* 호버 시 파란색으로 변경 */
+        }
+
+    </style>
+
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <div>
+        <h2><i class="fa-solid fa-headphones"></i> 나만의 플레이리스트 </h2>
+
+        <section class="genre-selection">
+            <h3>여러 장르를 선택하고, 나만의 플레이리스트를 만들어보세요!</h3>
+            <form id="genreForm">
+                <div class="genre-options">
+                    <button type="button" class="genre-btn" data-genre="POP">POP</button>
+                    <button type="button" class="genre-btn" data-genre="댄스">댄스</button>
+                    <button type="button" class="genre-btn" data-genre="힙합">힙합</button>
+                    <button type="button" class="genre-btn" data-genre="밴드">밴드</button>
+                    <button type="button" class="genre-btn" data-genre="발라드">발라드</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="playlist-results">
+            <div class="playlist-list" id="playlist">
+                <!-- 플레이리스트 결과가 표시될 영역 -->
+            </div>
+        </section>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                // 장르 버튼 클릭 시 선택 상태 토글하고 플레이리스트 생성
+                $('.genre-btn').click(function () {
+                    $(this).toggleClass('selected');
+
+                    // 선택된 장르 가져오기
+                    var selectedGenres = [];
+                    $('.genre-btn.selected').each(function () {
+                        selectedGenres.push($(this).data('genre'));
+                    });
+
+                    if (selectedGenres.length === 0) {
+                        $('#playlist').empty(); // 장르가 없으면 결과 영역 비우기
+                        return;
+                    }
+
+                    // 서버 요청
+                    $.ajax({
+                        url: '/myplaylist/make',
+                        type: 'GET',
+                        data: { genres: selectedGenres },
+                        success: function (response) {
+                            var $playlist = $('#playlist');
+
+                            // 기존 애니메이션 효과 초기화
+                            $playlist.css({
+                                opacity: 0,
+                                transform: 'translateY(20px)'
+                            });
+
+                            // DOM 업데이트를 위해 현재 콘텐츠 삭제
+                            setTimeout(function () {
+                                $playlist.empty();
+
+                                // 데이터 처리 및 결과 표시
+                                if (response && response.length > 0) {
+                                    response.forEach(function (song) {
+                                        var musicLink = `/music/${song.idx}`;
+                                        var artistLink = `/artist/${encodeURIComponent(song.singer)}`;
+
+                                        var card = `
+                            <div class="playlist-card">
+                                <form class="addToPlaylistForm" action="/addMyMusic" method="POST">
+                                    <input type="hidden" name="musicId" value="${song.idx}"/>
+                                    <button type="submit" class="add-to-playlist-btn">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </form>
+                                <img class="music-image" src="/img/album/${song.image}" alt="앨범 이미지">
+                                <div class="playlist-title">
+                                    <a href="${musicLink}" class="playlist-title">${song.title}</a>
+                                </div>
+                                <div class="playlist-singer">
+                                    <a href="${artistLink}" class="artist-link">${song.singer}</a>
+                                </div>
+                                <div class="playlist-genre">${song.genre}</div>
+                            </div>`;
+
+                                        $playlist.append(card);
+                                    });
+
+                                    // 애니메이션 효과 적용
+                                    setTimeout(function () {
+                                        $playlist.css({
+                                            opacity: 1,
+                                            transform: 'translateY(0)'
+                                        });
+                                    }, 100);
+                                } else {
+                                    $playlist.append('<p>선택된 장르에 맞는 음악이 없습니다.</p>');
+                                }
+                            }, 500);
+                        }
+                    });
+                });
+            });
+
+        </script>
+
+    </div>
+</div>
+</body>
+</html>

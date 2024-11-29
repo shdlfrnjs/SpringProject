@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -44,36 +46,58 @@ public class PlaylistController {
         model.addAttribute("currentPage", page);
         model.addAttribute("size", size);
 
+        String mostFrequentSinger = playlistService.getMostFrequentSinger();
+        model.addAttribute("mostFrequentSinger", mostFrequentSinger);
+
+        List<MusicDTO> artistAlbums = musicService.getAlbumsBySinger(mostFrequentSinger);
+
+        if (artistAlbums == null) {
+            artistAlbums = new ArrayList<>();
+        }
+
+        Collections.shuffle(artistAlbums);
+
+        List<MusicDTO> randomAlbums = artistAlbums.stream().limit(4).collect(Collectors.toList());
+        model.addAttribute("randomAlbums", randomAlbums);
+
+        String mostFrequentGenre = playlistService.getMostFrequentGenre();
+        model.addAttribute("mostFrequentGenre", mostFrequentGenre);
+
+
+        List<MusicDTO> genreMusics = musicService.getMusicsByGenre(mostFrequentGenre);
+        model.addAttribute("genreMusics", genreMusics);
+
         return "mymusic";
     }
 
     @PostMapping("/addMyMusic")
     @ResponseBody
     public Map<String, String> addToMyMusic(@RequestParam("musicId") Long musicId) {
-        if (playlistService.isMusicAlreadyAdded(musicId)) {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "이미 담긴 노래입니다.");
-            return response;
-        }
-
-        playlistService.addMusicToPlaylist(musicId);
-
         Map<String, String> response = new HashMap<>();
-        response.put("message", "나의 음악에 담겼습니다.");
+        try {
+            // 'mymusic' 카테고리에 음악을 추가
+            playlistService.addMusicToMyMusic(musicId);
+            response.put("message", "나의 음악에 담겼습니다.");
+        } catch (RuntimeException e) {
+            response.put("message", e.getMessage()); // "이미 담긴 노래입니다." 메시지 처리
+        }
         return response;
     }
+
     @PostMapping("/removeMyMusic")
     @ResponseBody
     public Map<String, String> removeMusicFromPlaylist(@RequestParam("musicId") Long musicId) {
         Map<String, String> response = new HashMap<>();
         try {
-            playlistService.removeMusicFromPlaylist(musicId);
+            // 'mymusic' 카테고리에서 음악을 삭제
+            playlistService.removeMusicFromMyMusic(musicId);
             response.put("message", "성공적으로 삭제되었습니다.");
-        } catch (Exception e) {
-            response.put("message", "삭제 실패" + e.getMessage());
+        } catch (RuntimeException e) {
+            response.put("message", e.getMessage()); // "삭제 실패" 메시지 처리
         }
         return response;
     }
+
 
     @GetMapping("/playlist/{category}")
     public String playlistPageByCategory(

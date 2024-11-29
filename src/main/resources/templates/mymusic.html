@@ -164,6 +164,104 @@
         border-color: #aaa;
         pointer-events: none; /* 비활성화된 버튼은 클릭 불가 */
       }
+      .albums {
+        text-align: center;
+      }
+
+      .album-list {
+        display: flex;
+        flex-wrap: wrap;  /* 여러 줄로 정렬되도록 설정 */
+        gap: 50px;  /* 아이템 간 간격 */
+        justify-content: center;  /* 중앙 정렬 */
+      }
+
+      .album-item {
+        padding: 15px;
+        width: 200px;  /* 앨범 커버의 가로 크기 */
+        text-align: center;
+        border-radius: 16px;  /* 기본적으로 둥근 테두리 */
+        transition: transform 0.3s ease, border-radius 0.3s ease;  /* 마우스 오버 시 확대 및 둥근 테두리 효과 */
+      }
+
+      .album-item:hover {
+        transform: scale(1.02);  /* 마우스를 올리면 카드가 살짝 확대됨 */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  /* 카드에 그림자 효과 추가 */
+        border-radius: 16px;  /* 마우스를 올리면 앨범 아이템의 테두리가 둥글어짐 */
+      }
+
+      .album-cover-container {
+        width: 100%;  /* 이미지 크기 맞추기 */
+        display: flex;
+        justify-content: center;  /* 앨범 커버를 중앙 정렬 */
+      }
+
+      .album-cover {
+        width: 100%;  /* 앨범 커버가 컨테이너 크기에 맞춰지게 */
+        height: auto;  /* 비율 유지하면서 크기 맞추기 */
+        border-radius: 8px;  /* 둥근 모서리 추가 */
+      }
+
+      .album-info {
+        margin-top: 10px;
+      }
+
+      .album-info h3 {
+        font-size: 1rem;
+        font-weight: bold;
+      }
+
+      .music-title {
+        font-size: 1rem;
+        font-weight: bold;
+
+        color: #666;
+        margin: 2px 0; /* 위아래 간격을 2px로 설정 */
+      }
+
+      .music-singer {
+        font-size: 0.9rem;
+        color: #666;
+        margin: 2px 0; /* 위아래 간격을 2px로 설정 */
+      }
+
+      .album-list{
+        margin-bottom: 15px;
+      }
+      .favorite-title {
+        font-weight: bold;  /* 글씨 굵게 설정 */
+        font-size: 1.2rem;  /* 제목 크기 설정 */
+        color: #2c3e50;  /* 진한 회색 */
+        text-align: center;  /* 중앙 정렬 */
+        line-height: 1.4;  /* 줄 간격 조정 */
+        margin-top: 40px;  /* 상하 여백 추가 */
+        letter-spacing: 0.5px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);  /* 부드러운 그림자 효과 */
+      }
+
+      .singer-name {
+        font-weight: bold; /* 일반 굵기 */
+        background-color: rgba(174, 225, 252, 0.5); /* 하늘색 배경 (50% 투명도) */
+        border-radius: 5px; /* 둥근 모서리 */
+        padding: 2px 5px; /* 배경 색이 텍스트를 감싸도록 여백 추가 */
+        transition: color 0.3s ease, background-color 0.3s ease; /* 색상과 배경 변화 애니메이션 추가 */
+      }
+
+
+      .suggested-album-title {
+        font-size: 1rem;  /* 글자 크기를 작게 설정 */
+        color: #7f8c8d;  /* 부드러운 회색 */
+        font-weight: 400;  /* 얇은 글씨 */
+        text-align: center;  /* 중앙 정렬 */
+        margin: 20px 0;  /* 위아래 여백 */
+        letter-spacing: 0.5px;  /* 글자 간격을 약간 넓혀서 가독성 향상 */
+        font-family: 'Roboto', sans-serif;  /* 깔끔하고 현대적인 글꼴 사용 */
+      }
+      .section-divider {
+        margin: 30px 0; /* 위아래 여백 */
+        border-top: 2px solid #ddd; /* 구분선 두께와 색상 */
+        width: 100%; /* 화면 가로로 꽉 차도록 */
+      }
+
 
     </style>
   </th:block>
@@ -174,90 +272,87 @@
   <!-- 1번 My Music 콘텐츠 -->
   <div>
     <div class="d-flex justify-content-between">
-      <h2>내가 담은 음악 <i class="fa-solid fa-music"></i></h2>
+      <h2>
+        <i class="fa-solid fa-folder"></i>
+        내가 담은 음악 (<span th:text="${totalItems}"></span>)
+      </h2>
     </div>
     <table class="music-list">
-    <thead>
-    <tr>
-      <th>번호</th>
-      <th>곡정보</th>
-      <th>앨범</th>
-      <th>삭제</th>
-    </tr>
-    </thead>
+      <thead>
+      <tr>
+        <th>번호</th>
+        <th>곡정보</th>
+        <th>앨범</th>
+        <th>삭제</th>
+      </tr>
+      </thead>
       <tbody th:each="music, iterStat : ${musics}">
-    <tr>
-      <td th:text="${(currentPage - 1) * size + iterStat.index + 1}"></td>
-      <td class="music-info">
-        <img th:src="@{/img/album/{image}(image=${music.image})}" alt="앨범 이미지">
-        <div class="music-details">
-          <div class="music-title">
-            <a th:href="@{/music/{idx}(idx=${music.idx})}" th:text="${music.title}"></a>
+      <tr>
+        <td th:text="${(currentPage - 1) * size + iterStat.index + 1}"></td>
+        <td class="music-info">
+          <img th:src="@{/img/album/{image}(image=${music.image})}" alt="앨범 이미지">
+          <div class="music-details">
+            <div class="music-title">
+              <a th:href="@{/music/{idx}(idx=${music.idx})}" th:text="${music.title}"></a>
+            </div>
+            <div class="music-singer">
+              <a th:href="@{/artist/{singer}(singer=${music.singer})}" th:text="${music.singer}"></a>
+            </div>
           </div>
-          <div class="music-singer">
-            <a th:href="@{/artist/{singer}(singer=${music.singer})}" th:text="${music.singer}"></a>
-          </div>
-        </div>
-      </td>
-      <td th:text="${music.album}"></td>
-      <!-- 페이지 상단에 알림 메시지 표시 영역 추가 -->
-      <div id="global-alert" class="alert" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; background-color: #4CAF50; color: white; border-radius: 5px; z-index: 1000;">
-      </div>
+        </td>
+        <td th:text="${music.album}"></td>
+        <td>
+          <form id="remove-form-{{music.idx}}">
+            <input type="hidden" name="musicId" th:value="${music.idx}" />
+            <button type="submit" class="btn-remove-to-playlist">
+              <i class="fa-solid fa-trash"></i> <!-- 삭제 아이콘 -->
+            </button>
+          </form>
+        </td>
+        <script>
+          document.querySelectorAll('form[id^="remove-form-"]').forEach(form => {
+            form.addEventListener('submit', function(event) {
+              event.preventDefault();
 
-      <td>
-        <form id="remove-form-{{music.idx}}">
-          <input type="hidden" name="musicId" th:value="${music.idx}" />
-          <button type="submit" class="btn-remove-to-playlist">
-            <i class="fa-solid fa-trash"></i> <!-- 삭제 아이콘 -->
-          </button>
-        </form>
-      </td>
+              const button = this.querySelector('button');
+              button.disabled = true;
+              const musicId = this.querySelector('input[name="musicId"]').value;
 
-      <script>
-        document.querySelectorAll('form[id^="remove-form-"]').forEach(form => {
-          form.addEventListener('submit', function(event) {
-            event.preventDefault();
+              // 중복 처리 방지
+              if (this.classList.contains('submitted')) {
+                return;
+              }
 
-            const button = this.querySelector('button');
-            button.disabled = true;
-            const musicId = this.querySelector('input[name="musicId"]').value;
+              this.classList.add('submitted');
 
-            // 중복 처리 방지
-            if (this.classList.contains('submitted')) {
-              return;
-            }
-
-            this.classList.add('submitted');
-
-            fetch('/removeMyMusic', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-              },
-              body: new URLSearchParams({
-                'musicId': musicId
+              fetch('/removeMyMusic', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                  'musicId': musicId
+                })
               })
-            })
-                    .then(response => response.json())
-                    .then(data => {
-                      alert(data.message);
-                      this.closest('tr').remove();  // 테이블에서 삭제된 항목 업데이트
-                    })
-                    .catch(error => {
-                      alert('음악 삭제 중 오류 발생: ' + error);
-                      button.disabled = false;
-                      this.classList.remove('submitted');
-                    });
+                      .then(response => response.json())
+                      .then(data => {
+                        alert(data.message);
+                        this.closest('tr').remove();  // 테이블에서 삭제된 항목 업데이트
+                      })
+                      .catch(error => {
+                        alert('음악 삭제 중 오류 발생: ' + error);
+                        button.disabled = false;
+                        this.classList.remove('submitted');
+                      });
+            });
           });
-        });
+        </script>
+      </tr>
+      </tbody>
+    </table>
 
-      </script>
-    </tr>
-    </tbody>
-  </table>
     <!-- 페이징 네비게이션 -->
     <div class="pagination">
-      <!-- 이전 버튼 -->
       <div th:if="${currentPage > 1}">
         <a th:href="@{ /mymusic(page=${currentPage - 1}, size=10, sort=${selectedSort}) }" th:text="'이전'"></a>
       </div>
@@ -265,12 +360,10 @@
         <a class="disabled" th:text="'이전'"></a>
       </div>
 
-      <!-- 페이지 번호 버튼 -->
       <div th:each="i : ${#numbers.sequence(1, totalPages)}">
         <a th:href="@{ /mymusic(page=${i}, size=10, sort=${selectedSort}) }" th:classappend="${i == currentPage ? 'active' : ''}" th:text="${i}"></a>
       </div>
 
-      <!-- 다음 버튼 -->
       <div th:if="${currentPage < totalPages}">
         <a th:href="@{ /mymusic(page=${currentPage + 1}, size=10, sort=${selectedSort}) }" th:text="'다음'"></a>
       </div>
@@ -280,7 +373,62 @@
     </div>
   </div>
 
+  <div class="section-divider"></div>
+
+  <div class="d-flex justify-content-between">
+    <h2>
+      <i class="fa-solid fa-hand-holding-heart"></i>
+      당신의 취향을 담은 추천
+    </h2>
   </div>
+  <!-- 가장 많이 담긴 가수의 음악 출력 -->
+  <h1 class="favorite-title">
+    🤖 스프링님이 선호하시는 가수는 "<span class="singer-name" th:text="${mostFrequentSinger}"></span>" 입니다.
+  </h1>
+
+  <div class="albums">
+    <p class="suggested-album-title">이 가수의 다른 앨범도 추천드려요!</p>
+    <div class="album-cover-container">
+      <div class="album-list">
+        <div th:each="music : ${randomAlbums}">
+          <div class="album-item">
+            <a th:href="@{/artist/{singer}(singer=${music.singer})}">
+              <img th:src="@{/img/album/{image}(image=${music.image})}" alt="앨범 이미지" class="album-cover">
+            </a>
+            <div class="album-info">
+              <p class="music-title" th:text="${music.title}">곡 제목</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 구분선 -->
+  <div class="section-divider"></div>
+
+  <!-- 가장 많이 담긴 장르의 음악 출력 -->
+  <h1 class="favorite-title">
+    🤖 스프링님이 선호하시는 장르는 "<span class="singer-name" th:text="${mostFrequentGenre}"></span>" 입니다.
+  </h1>
+
+  <div class="genre-musics">
+    <p class="suggested-album-title">이 장르의 다른 음악도 들어보세요!</p>
+    <div class="album-list">
+      <div th:each="music : ${genreMusics}">
+        <div class="album-item">
+          <a th:href="@{/music/{idx}(idx=${music.idx})}">
+            <img th:src="@{/img/album/{image}(image=${music.image})}" alt="앨범 이미지" class="album-cover">
+          </a>
+          <div class="album-info">
+            <p class="music-title" th:text="${music.title}">곡 제목</p>
+            <p class="music-singer" th:text="${music.singer}">가수</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 </body>
 </html>

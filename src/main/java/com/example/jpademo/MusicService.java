@@ -28,4 +28,9 @@ public interface MusicService {
 
     List<MusicDTO> getMusicsByIdx(List<Long> musicIdx);
 
+    List<MusicDTO> getAlbumsBySinger(String mostFrequentSinger);
+
+    List<MusicDTO> getMusicsByGenre(String genre);
+
+    List<MusicDTO> getPlaylistByGenres(List<String> genres);
 }

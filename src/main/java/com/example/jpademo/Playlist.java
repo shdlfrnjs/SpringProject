@@ -1,8 +1,15 @@
 package com.example.jpademo;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Table(name = "playlist")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Playlist {
 
     @Id

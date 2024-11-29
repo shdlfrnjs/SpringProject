@@ -20,4 +20,11 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
         @Query("SELECT p.music.idx FROM Playlist p WHERE p.category = :category")
         List<Long> findMusicIdxByCategory(@Param("category") String category);
 
+
+        boolean existsByMusicIdxAndCategory(Long musicIdx, String mymusic);
+
+        Optional<Playlist> findByMusicIdxAndCategory(Long musicIdx, String category);
+
+
+
 }

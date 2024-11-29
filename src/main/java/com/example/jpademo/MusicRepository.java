@@ -27,4 +27,6 @@ public interface MusicRepository extends JpaRepository<Music, Long> {
             "CASE WHEN LOWER(m.title) LIKE LOWER(:keyword) THEN 1 ELSE 2 END, m.hits DESC")
     List<Music> findByTitleContainingIgnoreCaseOrderByRelevance(@Param("keyword") String keyword);
 
+    @Query("SELECT m FROM Music m WHERE m.genre IN :genres ORDER BY FUNCTION('RAND')")
+    List<Music> findByGenresRandomly(List<String> genres);
 }

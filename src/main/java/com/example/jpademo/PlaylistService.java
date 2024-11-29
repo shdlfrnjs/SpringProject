@@ -5,12 +5,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
 public class PlaylistService {
+
+    @Autowired
+    private MusicService musicService;
+
 
     @Autowired
     private PlaylistRepository playlistRepository;
@@ -18,26 +22,7 @@ public class PlaylistService {
     @Autowired
     private MusicRepository musicRepository;
 
-    public void addMusicToPlaylist(Long musicId) {
-        // 음악 객체를 찾아서 플레이리스트에 추가
-        Music music = musicRepository.findById(musicId).orElseThrow(() -> new RuntimeException("Music not found"));
 
-        Playlist playlist = new Playlist();
-        playlist.setMusic(music);
-        playlist.setCategory("mymusic");
-
-
-        playlistRepository.save(playlist);
-    }
-
-    public List<Long> getMusicIdxInPlaylist() {
-        return playlistRepository.findMusicIdxInPlaylist();
-    }
-
-    public boolean isMusicAlreadyAdded(Long musicId) {
-        List<Long> musicIdsInPlaylist = playlistRepository.findMusicIdxInPlaylist();
-        return musicIdsInPlaylist.contains(musicId);
-    }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
 
@@ -59,6 +44,84 @@ public class PlaylistService {
 
     public List<Long> getMusicIdxByCategory(String category) {
         return playlistRepository.findMusicIdxByCategory(category);
-}
+    }
 
+    public String getMostFrequentSinger() {
+        // "mymusic" 카테고리의 음악 ID를 가져옴
+        List<Long> musicIds = getMusicIdxByCategory("mymusic");
+        // 해당 음악 ID로 음악 정보를 가져옴
+        List<MusicDTO> allMusics = musicService.getMusicsByIdx(musicIds);
+
+        // 각 가수가 추가된 횟수를 세는 맵
+        Map<String, Integer> singerCount = new HashMap<>();
+
+        for (MusicDTO music : allMusics) {
+            String singer = music.getSinger();
+            singerCount.put(singer, singerCount.getOrDefault(singer, 0) + 1);
+        }
+
+        // 가장 많이 추가된 가수를 찾음
+        String mostFrequentSinger = singerCount.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .get()
+                .getKey();
+
+        return mostFrequentSinger;
+    }
+
+
+    public String getMostFrequentGenre() {
+        // "mymusic" 카테고리의 음악 ID를 가져옴
+        List<Long> musicIds = getMusicIdxByCategory("mymusic");
+        // 해당 음악 ID로 음악 정보를 가져옴
+        List<MusicDTO> allMusics = musicService.getMusicsByIdx(musicIds);
+
+        // 각 장르가 등장한 횟수를 세는 맵
+        Map<String, Integer> genreCount = new HashMap<>();
+
+        for (MusicDTO music : allMusics) {
+            String genre = music.getGenre();
+            genreCount.put(genre, genreCount.getOrDefault(genre, 0) + 1);
+        }
+
+        // 가장 많이 등장한 장르를 찾음
+        String mostFrequentGenre = genreCount.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .get()
+                .getKey();
+
+        // 해당 장르에 랜덤 4곡 가져오기
+        List<MusicDTO> genreMusics = musicService.getMusicsByGenre(mostFrequentGenre);
+
+        return mostFrequentGenre;
+    }
+
+    // 'mymusic' 카테고리에 음악 추가
+    public void addMusicToMyMusic(Long musicIdx) {
+        // 'mymusic' 카테고리에서 이미 추가된 음악이 있는지 확인
+        if (playlistRepository.existsByMusicIdxAndCategory(musicIdx, "mymusic")) {
+            throw new RuntimeException("이미 담긴 노래입니다.");
+        }
+
+        // 'mymusic' 카테고리에 음악 추가
+        Music music = musicRepository.findById(musicIdx)
+                .orElseThrow(() -> new RuntimeException("음악을 찾을 수 없습니다."));
+
+        Playlist playlist = Playlist.builder()
+                .music(music)
+                .category("mymusic")
+                .build();
+
+        playlistRepository.save(playlist);
+    }
+
+    // 'mymusic' 카테고리에서 음악 삭제
+    public void removeMusicFromMyMusic(Long musicIdx) {
+        Playlist playlist = playlistRepository.findByMusicIdxAndCategory(musicIdx, "mymusic")
+                .orElseThrow(() -> new RuntimeException("이 음악은 'mymusic' 카테고리에 없습니다."));
+
+        playlistRepository.delete(playlist);
+    }
 }
