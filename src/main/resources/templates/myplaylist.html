@@ -244,8 +244,28 @@
                         }
                     });
                 });
-            });
 
+                // addToPlaylistForm 폼 제출 이벤트 가로채기
+                $(document).on('submit', '.addToPlaylistForm', function (e) {
+                    e.preventDefault();
+
+                    var $form = $(this);
+                    var url = $form.attr('action');
+                    var formData = $form.serialize();
+
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: formData,
+                        success: function (response) {
+                            alert(response.message);
+                        },
+                        error: function () {
+                            alert('음악을 추가하는 중 오류가 발생했습니다. 다시 시도해주세요.');
+                        }
+                    });
+                });
+            });
         </script>
 
     </div>
