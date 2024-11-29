@@ -29,6 +29,11 @@ public class PlaylistController {
 
         List<Long> musicIds = playlistService.getMusicIdxByCategory("mymusic");
 
+        // musicIds가 비어 있는 경우 예외 페이지로 이동
+        if (musicIds == null || musicIds.isEmpty()) {
+            return "mymusicexception"; // mymusicexception.html 반환
+        }
+
         List<MusicDTO> allMusics = musicService.getMusicsByIdx(musicIds);
 
         int totalItems = allMusics.size();
