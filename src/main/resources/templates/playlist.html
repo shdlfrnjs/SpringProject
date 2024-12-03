@@ -146,13 +146,12 @@
   <div>
     <div>
       <h2>
-        Playlist:
+        <i class="fa-solid fa-music"></i>
         <span th:text="${category == 'Xmas' ? '듣기만 해도 설레는 크리스마스 캐롤' :
                       category == 'Drive' ? '드라이브할때 듣는 신나는 노래' :
-                      category == 'Workout' ? '헬스장에서 듣는 노래' :
+                      category == 'Workout' ? '헬스장에서 듣는 파워풀한 노래' :
                       category == 'Study' ? '집중할 때 듣기좋은 잔잔한 음악' :
-                      category == 'Chill' ? 'CHILL VIBES' : '기타'}"></span>
-        <i class="fa-solid fa-music"></i>
+                      category == 'Chill' ? '힐링이 필요할 때 듣는 포근한 음악' : '기타'}"></span>
       </h2>
     </div>
     <table class="music-list">

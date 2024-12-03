@@ -219,6 +219,7 @@
           font-size: 18px; /* 텍스트 크기 조정 */
           color: #333; /* 텍스트 색상 */
           margin-top: 5px;
+          text-align: center;
       }
 
       /* 링크의 기본 밑줄 제거 */
@@ -229,7 +230,7 @@
       /* 호버 시 스타일 */
       .playlist-item a:hover {
           color: #000; /* 호버 시 텍스트 색 변경 (원하는 색으로 수정 가능) */
-          text-decoration: underline; /* 호버 시 밑줄 추가 */
+          text-decoration: none; /* 호버 시 밑줄 추가 */
       }
 
     </style>
@@ -255,7 +256,7 @@
     <!-- 1번 메인컨텐츠 (전체 곡 보기) -->
     <div class="section">
       <div class="d-flex justify-content-between">
-        <h2>전체 곡 보기 <i class="fa-solid fa-music"></i></h2>
+        <h2><i class="fa-solid fa-music"></i> 전체 곡 보기 </h2>
         <select id="sortSelect" class="sort-dropdown" onchange="sortMusic()">
           <option value="releaseDate" th:selected="${selectedSort == 'releaseDate'}">발매일순</option>
           <option value="ranking" th:selected="${selectedSort == 'ranking'}">인기순</option>
@@ -367,37 +368,37 @@
 
     <!-- 2번 메인컨텐츠 (플레이리스트 추천) -->
     <div class="section">
-      <h2>인기 플레이리스트</h2>
+      <h2><i class="fa-solid fa-headphones-simple"></i> 인기 플레이리스트</h2>
 
       <div class="playlist-container">
         <div class="playlist-item">
           <a href="/playlist/Xmas">
             <img th:src="@{/img/playlist/xmas.png}" alt="Xmas Playlist" class="playlist-img">
-            <p>듣기만 해도 설레는 크리스마스 캐롤 <i class="fa-solid fa-tree"></i></p>
+            <p>듣기만 해도 설레는<br> 크리스마스 캐롤</p>
           </a>
         </div>
         <div class="playlist-item">
           <a href="/playlist/Drive">
             <img th:src="@{/img/playlist/drive.png}" alt="Drive Playlist" class="playlist-img">
-            <p>드라이브할때 듣는 신나는 노래</p>
+            <p>드라이브할때 듣는<br> 신나는 노래</p>
           </a>
         </div>
         <div class="playlist-item">
           <a href="/playlist/Workout">
             <img th:src="@{/img/playlist/workout.png}" alt="Workout Playlist" class="playlist-img">
-            <p>[Playlist] 헬스장에서 듣는 노래</p>
+            <p>헬스장에서 듣는<br> 파월풀한 노래</p>
           </a>
         </div>
         <div class="playlist-item">
           <a href="/playlist/Study">
             <img th:src="@{/img/playlist/study.png}" alt="Study Playlist" class="playlist-img">
-            <p>집중할 때 듣기좋은 잔잔한 음악</p>
+            <p>집중할 때 듣기좋은<br> 잔잔한 음악</p>
           </a>
         </div>
         <div class="playlist-item">
           <a href="/playlist/Chill">
             <img th:src="@{/img/playlist/chill.png}" alt="Chill Playlist" class="playlist-img">
-            <p>CHILL VIBES <i class="fa-regular fa-moon"></i></p>
+            <p>힐링이 필요할때 듣는<br> 포근한 음악</i></p>
           </a>
         </div>
       </div>
